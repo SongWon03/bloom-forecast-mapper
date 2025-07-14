@@ -31,7 +31,7 @@ const Index = () => {
           </h1>
           <h2 className="text-3xl font-bold mb-4">2025 Bloom Map</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            PhenoFACT 모델로 예측하는 전국 봄꽃 개화 지도
+            PhenoFACT로 예측한 전국 봄꽃 개화 지도
           </p>
           
           {/* Quick Stats */}
@@ -44,7 +44,7 @@ const Index = () => {
                     <div className="text-2xl mb-2">{config.icon}</div>
                     <div className="font-semibold">{config.name}</div>
                     <div className="text-sm text-muted-foreground">
-                      {stats.blooming}곳 개화 임박
+                      {stats.total}곳 예측
                     </div>
                   </CardContent>
                 </Card>
@@ -70,7 +70,7 @@ const Index = () => {
             </Select>
             
             <div className="text-sm text-muted-foreground">
-              PhenoFACT v{predictions[0]?.model_version || '0.9.3'} 기반 예측
+              PhenoFACT v0.0.15 기반 예측
             </div>
           </div>
           
