@@ -61,7 +61,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				flower: {
+					cherry: 'hsl(var(--cherry))',
+					forsythia: 'hsl(var(--forsythia))',
+					azalea: 'hsl(var(--azalea))'
 				}
+			},
+			fontFamily: {
+				'noto': ['Noto Sans KR', 'sans-serif'],
+				'abril': ['Abril Fatface', 'serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
