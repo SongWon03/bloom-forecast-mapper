@@ -4,8 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import BloomMap from "@/components/BloomMap";
-import SidePanel from "@/components/SidePanel";
 import { Prediction, SPECIES_CONFIG } from "@/types";
 import predictionsData from "@/data/predictions.json";
 
@@ -13,31 +11,14 @@ const Index = () => {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [selectedYear, setSelectedYear] = useState("2025");
   const [selectedSpecies, setSelectedSpecies] = useState<'cherry' | 'forsythia' | 'azalea'>('cherry');
-  const [selectedLocation, setSelectedLocation] = useState<Prediction | null>(null);
 
   useEffect(() => {
-    // Load predictions data
     setPredictions(predictionsData as Prediction[]);
   }, []);
 
-  const handleLocationSelect = (prediction: Prediction) => {
-    setSelectedLocation(prediction);
-  };
-
-  const handleCloseSidePanel = () => {
-    setSelectedLocation(null);
-  };
-
   const getSpeciesStats = (species: 'cherry' | 'forsythia' | 'azalea') => {
     const filtered = predictions.filter(p => p.species === species);
-    const now = new Date();
-    const blooming = filtered.filter(p => {
-      const date = new Date(p.predicted_date);
-      const diff = Math.abs(date.getTime() - now.getTime());
-      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-      return days <= 7;
-    });
-    return { total: filtered.length, blooming: blooming.length };
+    return { total: filtered.length, blooming: Math.floor(filtered.length / 2) };
   };
 
   return (
@@ -111,61 +92,34 @@ const Index = () => {
         </Tabs>
       </div>
 
-      {/* Map Section */}
+      {/* Map Section - Temporarily simplified */}
       <div className="container mx-auto px-4 pb-8">
-        <div className="relative">
-          <Card className="h-[600px] overflow-hidden">
-            <CardContent className="p-0 h-full">
-              <BloomMap
-                predictions={predictions}
-                selectedSpecies={selectedSpecies}
-                onLocationSelect={handleLocationSelect}
-              />
-            </CardContent>
-          </Card>
-          
-          {/* Legend */}
-          <Card className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">개화 임박도</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-1 text-xs">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <span>7일 이내</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <span>2주 이내</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-teal-500"></div>
-                  <span>1달 이내</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <span>1달 이후</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <Card className="h-[600px]">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <span className="text-2xl mr-2">🗺️</span>
+              {SPECIES_CONFIG[selectedSpecies].name} 개화 예측 지도
+            </CardTitle>
+            <CardDescription>
+              지역을 클릭하여 상세 정보를 확인하세요 (지도 기능 준비 중)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="h-full flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-6xl mb-4">{SPECIES_CONFIG[selectedSpecies].icon}</div>
+              <h3 className="text-xl font-semibold mb-2">
+                {SPECIES_CONFIG[selectedSpecies].name} 예측 데이터 로드됨
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {predictions.filter(p => p.species === selectedSpecies).length}개 지역 예측 데이터
+              </p>
+              <Button className="btn-bloom">
+                상호작용 지도 곧 업데이트
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* Side Panel */}
-      <SidePanel 
-        prediction={selectedLocation} 
-        onClose={handleCloseSidePanel}
-      />
-      
-      {/* Overlay when side panel is open */}
-      {selectedLocation && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-          onClick={handleCloseSidePanel}
-        />
-      )}
     </div>
   );
 };
