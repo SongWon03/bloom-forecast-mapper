@@ -40,10 +40,10 @@ export default function BoardNew() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) { // 1MB
+      if (file.size > 10 * 1024 * 1024) { // 10MB
         toast({
           title: "파일 크기 초과",
-          description: "파일 크기는 1MB 이하로 업로드해주세요.",
+          description: "파일 크기는 10MB 이하로 업로드해주세요.",
           variant: "destructive",
         });
         return;
@@ -258,7 +258,7 @@ export default function BoardNew() {
                 className="hidden"
               />
               <p className="text-xs text-muted-foreground mt-2">
-                최대 1MB, JPG/PNG 형식
+                최대 10MB, JPG/PNG 형식
               </p>
             </div>
           </div>

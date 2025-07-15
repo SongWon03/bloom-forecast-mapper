@@ -90,7 +90,7 @@ export default function AdminPanel() {
       .from('sightings')
       .select(`
         *,
-        profiles!inner(nickname, role)
+        profiles(nickname, role)
       `)
       .order('created_at', { ascending: false });
 
@@ -265,8 +265,8 @@ export default function AdminPanel() {
                         {sighting.region_name} - {sighting.species}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        작성자: {sighting.profiles.nickname}
-                        {sighting.profiles.role === 'admin' && (
+                        작성자: {sighting.profiles?.nickname || '알 수 없음'}
+                        {sighting.profiles?.role === 'admin' && (
                           <Badge variant="secondary" className="ml-2 text-xs">
                             관리자
                           </Badge>

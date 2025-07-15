@@ -1,199 +1,160 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Thermometer, Snowflake, Flower, ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Thermometer, Snowflake, Sun, Flower } from "lucide-react";
 
 export default function Model() {
-  const steps = [
-    {
-      icon: <Snowflake className="w-8 h-8 text-blue-500" />,
-      title: "Chill Accumulation",
-      subtitle: "저온 누적",
-      description: "겨울철 저온 기간 동안 식물이 휴면을 깨기 위해 필요한 차가운 온도를 누적하는 단계입니다.",
-      details: "일반적으로 0-7.2°C 범위의 온도가 가장 효과적입니다."
-    },
-    {
-      icon: <Thermometer className="w-8 h-8 text-orange-500" />,
-      title: "Heat Accumulation", 
-      subtitle: "열 누적",
-      description: "충분한 저온을 경험한 후, 식물이 개화하기 위해 필요한 온도를 누적하는 단계입니다.",
-      details: "기준 온도(보통 4-6°C) 이상의 온도를 적산합니다."
-    },
-    {
-      icon: <Flower className="w-8 h-8 text-pink-500" />,
-      title: "Bloom Prediction",
-      subtitle: "개화 예측",
-      description: "저온 누적과 열 누적이 임계값에 도달하면 개화 시기를 예측할 수 있습니다.",
-      details: "종별로 다른 임계값을 적용하여 정확도를 높입니다."
-    }
-  ];
-
-  const features = [
-    "기상청 실시간 기온 데이터 활용",
-    "지역별 미기후 특성 반영",
-    "머신러닝 기반 매개변수 최적화",
-    "95% 신뢰구간 제공",
-    "과거 관측 데이터와 검증"
-  ];
-
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-12">
       {/* Hero Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4">What is Chill-Day Model?</h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Chill-Day 모델은 식물의 개화 시기를 예측하는 생태학적 모델입니다.
-          겨울철 저온 누적과 봄철 열 누적을 통해 정확한 개화일을 예측합니다.
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-6">What is Chill-Day Model?</h1>
+        <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+          <b>Chill-Day Model</b>은 겨울철 저온(Chill)과 봄철 누적 온도(Heat, Day)를 함께 고려하여 벚꽃, 개나리, 진달래 등 다양한 식물의 개화 시기를 예측하는 국내 최적화 생태 모델입니다.
         </p>
-      </div>
-
-      {/* Model Steps */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-8">모델 작동 원리</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {steps.map((step, index) => (
-            <Card key={index} className="text-center">
-              <CardHeader>
-                <div className="flex justify-center mb-4">
-                  {step.icon}
-                </div>
-                <CardTitle className="text-xl">{step.title}</CardTitle>
-                <CardDescription className="text-base font-medium">
-                  {step.subtitle}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-3">{step.description}</p>
-                <p className="text-sm text-muted-foreground italic">{step.details}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Model Flow Diagram */}
-      <section className="mb-16">
-        <Card className="bg-gradient-to-r from-blue-50 to-pink-50">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">모델 흐름도</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-center space-x-8 py-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl mb-2">
-                  ❄️
-                </div>
-                <p className="font-medium">겨울철 저온</p>
-                <p className="text-sm text-muted-foreground">Chill Hours</p>
-              </div>
-              
-              <div className="text-2xl text-muted-foreground">→</div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white text-2xl mb-2">
-                  🌡️
-                </div>
-                <p className="font-medium">봄철 온도</p>
-                <p className="text-sm text-muted-foreground">Heat Units</p>
-              </div>
-              
-              <div className="text-2xl text-muted-foreground">→</div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-pink-500 rounded-full flex items-center justify-center text-white text-2xl mb-2">
-                  🌸
-                </div>
-                <p className="font-medium">개화 예측</p>
-                <p className="text-sm text-muted-foreground">Bloom Date</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Features */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-8">모델 특징</h2>
-        <div className="max-w-2xl mx-auto">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center mb-4">
-              <div className="w-2 h-2 bg-primary rounded-full mr-4"></div>
-              <span>{feature}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Species Comparison */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-8">종별 개화 특성</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <span className="text-2xl mr-2">🌸</span>
-                벚꽃
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p><Badge variant="secondary">저온 요구도</Badge> 높음</p>
-                <p><Badge variant="secondary">열 요구도</Badge> 중간</p>
-                <p><Badge variant="secondary">개화 기간</Badge> 3-4월</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <span className="text-2xl mr-2">🌼</span>
-                개나리
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p><Badge variant="secondary">저온 요구도</Badge> 중간</p>
-                <p><Badge variant="secondary">열 요구도</Badge> 낮음</p>
-                <p><Badge variant="secondary">개화 기간</Badge> 3월</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <span className="text-2xl mr-2">🌺</span>
-                진달래
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p><Badge variant="secondary">저온 요구도</Badge> 높음</p>
-                <p><Badge variant="secondary">열 요구도</Badge> 높음</p>
-                <p><Badge variant="secondary">개화 기간</Badge> 4-5월</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Links */}
-      <section className="text-center">
-        <h2 className="text-3xl font-bold mb-8">더 알아보기</h2>
-        <div className="flex justify-center space-x-4">
+        <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed mt-4">
+          <b>pyCDM4F</b>는 이 모델을 누구나 쉽게 활용할 수 있도록 만든 오픈소스 Python 패키지로, <b>내장 데이터</b>와 <b>직접 커스터마이징한 기상·생육 데이터</b> 모두를 지원합니다.
+        </p>
+        <p className="text-base text-primary font-semibold mt-4">
+          Chill-Day Model은 단순한 공식이 아니라, 실제 관측 데이터와 과학적 근거에 기반하여 한국 지역에서 가장 높은 예측 정확도를 보입니다.
+        </p>
+        <div className="flex justify-center mt-6">
           <Button variant="outline" asChild>
-            <a href="https://github.com/phenofact/chill-day-model" target="_blank" rel="noopener noreferrer">
-              <Github className="w-4 h-4 mr-2" />
-              GitHub Repository
-              <ExternalLink className="w-3 h-3 ml-2" />
+            <a href="https://wikidocs.net/book/17034" target="_blank" rel="noopener noreferrer">
+              📘 pyCDM4F 공식 설명서 (위키독스)
+              <ExternalLink className="w-4 h-4 ml-2" />
             </a>
           </Button>
+        </div>
+      </div>
+
+      {/* Model Principle */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">Chill-Day Model의 원리</h2>
+        <div className="max-w-4xl mx-auto text-lg leading-relaxed text-center mb-8">
+          <p className="mb-6">
+            Chill-Day Model은 식물의 휴면 타파(저온 요구 충족)와 생장 개시(온도 누적)를 모두 반영합니다.
+          </p>
+          <p className="mb-6">
+            <b>1) Chill(저온) 누적</b>: 겨울 동안 일정 온도(0~7.2°C) 이하의 시간이 충분히 쌓이면 식물의 휴면이 해제됩니다.
+          </p>
+          <p className="mb-6">
+            <b>2) Heat(온도) 누적</b>: 휴면이 풀린 뒤, 일정 기준 이상의 온도가 누적되면 개화가 시작됩니다.
+          </p>
+          <p className="mb-6">
+            이 두 단계를 수식으로 계산하여, 각 지역·연도별로 실제 개화일을 예측합니다.
+          </p>
+          <p className="mb-6">
+            pyCDM4F는 <b>내장된 전국 관측 데이터</b>와 <b>직접 수집한 기상·생육 데이터</b> 모두를 활용할 수 있으며, <b>예측 결과의 평가</b>와 <b>시각화</b> 기능도 제공합니다.
+          </p>
+        </div>
+        
+        {/* Visual Representation */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Chill Phase */}
+            <Card className="text-center p-6 border-2 border-blue-200 bg-blue-50/30">
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Snowflake className="w-8 h-8 text-blue-600" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-blue-800">Chill 누적</h3>
+              <p className="text-sm text-blue-700 leading-relaxed">
+                0~7.2°C 저온 시간 누적<br />
+                식물 휴면 해제
+              </p>
+            </Card>
+
+            {/* Heat Phase */}
+            <Card className="text-center p-6 border-2 border-orange-200 bg-orange-50/30">
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Sun className="w-8 h-8 text-orange-600" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-orange-800">Heat 누적</h3>
+              <p className="text-sm text-orange-700 leading-relaxed">
+                기준 온도 이상 누적<br />
+                생장 개시 준비
+              </p>
+            </Card>
+
+            {/* Bloom Phase */}
+            <Card className="text-center p-6 border-2 border-pink-200 bg-pink-50/30">
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center">
+                  <Flower className="w-8 h-8 text-pink-600" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-pink-800">개화</h3>
+              <p className="text-sm text-pink-700 leading-relaxed">
+                충분한 온도 누적<br />
+                꽃이 피어남
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Features */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">pyCDM4F 주요 기능</h2>
+        <div className="max-w-3xl mx-auto">
+          <div className="space-y-4 text-lg leading-relaxed">
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0"></div>
+              <p><b>내장 데이터셋</b>과 <b>사용자 커스텀 데이터</b> 모두 지원</p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0"></div>
+              <p>Chill-Day 공식 기반 <b>개화·발아 예측</b> 및 <b>결과 평가</b></p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0"></div>
+              <p><b>시각화, 클러스터링, t-SNE</b> 등 다양한 분석 도구 제공</p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0"></div>
+              <p>전국/지역별/종별 <b>정확도 평가</b></p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-primary rounded-full mt-3 flex-shrink-0"></div>
+              <p>오픈소스, 연구·실무·교육 등 다양한 활용 가능</p>
+            </div>
+          </div>
+          <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+            <p className="text-base text-primary font-semibold text-center">
+              예측 결과는 2025년 기준, 공식 기상청 예보와 유사하거나 더 높은 정확도를 보였으며, 울릉도 등 특수 지역도 지원합니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How to use & Contact */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">활용 예시 및 문의</h2>
+        <div className="max-w-3xl mx-auto text-lg leading-relaxed text-center">
+          <p className="mb-6">
+            pyCDM4F는 <b>연구, 실무, 교육, 시민과학, SNS 공유</b> 등 다양한 목적으로 활용되고 있습니다.
+          </p>
+          <p className="mb-6">
+            <b>직접 데이터 커스터마이징</b> 및 <b>코드 예제</b>는 공식 설명서에서 자세히 안내합니다.
+          </p>
+          <p className="text-base text-primary font-semibold mb-6">
+            질문, 버그, 개선 요청 등은 언제든 공식 이메일로 문의해 주세요.
+          </p>
+          <div className="mb-6 space-y-2">
+            <a href="mailto:rsw147362@gmail.com" className="block underline text-blue-600 hover:text-blue-800 transition-colors">
+              rsw147362@gmail.com
+            </a>
+            <a href="mailto:kimsongwon10@korea.ac.kr" className="block underline text-blue-600 hover:text-blue-800 transition-colors">
+              kimsongwon10@korea.ac.kr
+            </a>
+          </div>
           <Button variant="outline" asChild>
-            <a href="https://doi.org/10.1000/phenofact" target="_blank" rel="noopener noreferrer">
-              <span className="mr-2">📄</span>
-              Research Paper
-              <ExternalLink className="w-3 h-3 ml-2" />
+            <a href="https://wikidocs.net/book/17034" target="_blank" rel="noopener noreferrer">
+              📘 pyCDM4F 공식 설명서 바로가기
+              <ExternalLink className="w-4 h-4 ml-2" />
             </a>
           </Button>
         </div>

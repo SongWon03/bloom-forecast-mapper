@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, MapPin, User, Clock } from "lucide-react";
 import { Sighting, SPECIES_CONFIG } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function BoardDetail() {
   const { id } = useParams();
@@ -13,13 +14,27 @@ export default function BoardDetail() {
 
   useEffect(() => {
     if (!id) return;
-    
-    const stored = localStorage.getItem("bloom-sightings");
-    if (stored) {
-      const sightings: Sighting[] = JSON.parse(stored);
-      const found = sightings.find(s => s.id === id);
-      setSighting(found || null);
-    }
+    // supabase에서 직접 데이터 fetch
+    const fetchSighting = async () => {
+      const { data, error } = await supabase
+        .from('sightings')
+        .select(`*, profiles(nickname)`) // left join으로 변경
+        .eq('id', id)
+        .single();
+      if (!error && data) {
+        setSighting({
+          ...data,
+          species: data.species as 'cherry' | 'forsythia' | 'azalea',
+          stage: data.stage as 'bud' | 'bloom',
+          nickname: (data.profiles && typeof data.profiles === 'object' && data.profiles !== null && 'nickname' in (data.profiles ?? {}))
+            ? (data.profiles as { nickname: string }).nickname
+            : '익명',
+        });
+      } else {
+        setSighting(null);
+      }
+    };
+    fetchSighting();
   }, [id]);
 
   if (!sighting) {
@@ -98,11 +113,13 @@ export default function BoardDetail() {
           {sighting.photo_url ? (
             <Card>
               <CardContent className="p-0">
-                <div className="aspect-[4/3] bg-muted rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">📷</div>
-                    <p className="text-muted-foreground">업로드된 사진</p>
-                  </div>
+                <div className="aspect-[4/3] bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                  <img
+                    src={sighting.photo_url}
+                    alt="제보 사진"
+                    className="object-cover w-full h-full"
+                    style={{ maxHeight: 400 }}
+                  />
                 </div>
               </CardContent>
             </Card>

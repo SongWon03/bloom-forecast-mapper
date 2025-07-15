@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,11 +35,20 @@ export default function Board() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useAuth();
+  const location = useLocation();
+
+  // Board 페이지 마운트 시 필터/검색 조건 초기화
+  useEffect(() => {
+    setSearchTerm("");
+    setSpeciesFilter("all");
+    setStageFilter("all");
+  }, [location.pathname]);
 
   useEffect(() => {
     fetchSightings();
     checkAdminStatus();
-  }, [user]);
+    // location.pathname이 바뀔 때마다(즉, /board로 이동할 때마다) 새로 fetch
+  }, [user, location.pathname]);
 
   const checkAdminStatus = async () => {
     if (!user) {
@@ -82,29 +91,32 @@ export default function Board() {
           photo_url,
           memo,
           created_at,
-          profiles!inner(nickname, role)
+          profiles(nickname, role)
         `)
         .order('created_at', { ascending: false });
+
+      console.log('sightings data:', data);
+      console.log('sightings error:', error);
 
       if (error) {
         console.error('Error fetching sightings:', error);
       } else {
         // Transform data to match our interface
-        const transformedData: SimpleSighting[] = (data || []).map(item => ({
+        const transformedData = Array.isArray(data) ? data.map(item => ({
           id: item.id,
           user_id: item.user_id,
           region_name: item.region_name,
           lat: item.lat,
           lon: item.lon,
-          species: item.species as 'cherry' | 'forsythia' | 'azalea',
-          stage: item.stage as 'bud' | 'bloom',
+          species: item.species,
+          stage: item.stage,
           date: item.date,
           photo_url: item.photo_url,
           memo: item.memo,
           created_at: item.created_at,
-          nickname: (item.profiles as any)?.nickname || '익명',
-          isAdmin: (item.profiles as any)?.role === 'admin'
-        }));
+          nickname: item.profiles?.nickname || '익명',
+          isAdmin: item.profiles?.role === 'admin'
+        })) : [];
         setSightings(transformedData);
         setFilteredSightings(transformedData);
       }
@@ -245,35 +257,26 @@ export default function Board() {
           ))}
         </div>
       ) : filteredSightings.length === 0 ? (
-        <Card className="text-center py-16">
-          <CardContent>
-            <div className="text-6xl mb-4">🌸</div>
-            <CardTitle className="mb-2">
-              {sightings.length === 0 ? "첫 번째 제보를 남겨주세요!" : "검색 결과가 없습니다"}
-            </CardTitle>
-            <CardDescription className="mb-6">
-              {sightings.length === 0 
-                ? "아직 등록된 개화 제보가 없습니다. 첫 번째 제보자가 되어보세요!"
-                : "다른 검색 조건을 시도해보세요."
-              }
-            </CardDescription>
-            {sightings.length === 0 && user && (
-              <Button asChild className="btn-bloom">
-                <Link to="/board/new">
-                  <Plus className="w-4 h-4 mr-2" />
-                  제보하기
-                </Link>
-              </Button>
-            )}
-            {!user && (
-              <Button asChild variant="outline">
-                <Link to="/login">
-                  로그인 후 제보하기
-                </Link>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4">🌸</div>
+          <div className="mb-2 font-bold">아직 등록된 개화 제보가 없습니다!</div>
+          <div className="mb-6 text-muted-foreground">첫 번째 제보자가 되어보세요!</div>
+          {user && (
+            <Button asChild className="btn-bloom">
+              <Link to="/board/new">
+                <Plus className="w-4 h-4 mr-2" />
+                제보하기
+              </Link>
+            </Button>
+          )}
+          {!user && (
+            <Button asChild variant="outline">
+              <Link to="/login">
+                로그인 후 제보하기
+              </Link>
+            </Button>
+          )}
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSightings.map((sighting) => (
@@ -295,8 +298,13 @@ export default function Board() {
               </CardHeader>
               <CardContent>
                 {sighting.photo_url && (
-                  <div className="aspect-[4/3] bg-muted rounded-lg mb-3 flex items-center justify-center">
-                    <span className="text-4xl">📷</span>
+                  <div className="aspect-[4/3] bg-muted rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={sighting.photo_url}
+                      alt="제보 사진"
+                      className="object-cover w-full h-full"
+                      style={{ maxHeight: 240 }}
+                    />
                   </div>
                 )}
                 
@@ -353,3 +361,6 @@ export default function Board() {
     </div>
   );
 }
+
+
+

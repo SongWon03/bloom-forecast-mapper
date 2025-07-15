@@ -15,6 +15,7 @@ import BoardDetail from "./pages/BoardDetail";
 import HallOfFame from "./pages/HallOfFame";
 import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/board/:id" element={<BoardDetail />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/hall-of-fame" element={<HallOfFame />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Layout>

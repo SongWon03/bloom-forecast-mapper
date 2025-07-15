@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar } from "lucide-react";
+import { Calendar, Clock, TrendingUp, Info } from "lucide-react";
 import { Prediction, SPECIES_CONFIG } from "@/types";
 import cherryBloomMap from "@/assets/2025 Cherry.png";
 import forsythiaBloomMap from "@/assets/2025 Forsythia.png";
@@ -16,8 +16,8 @@ interface SimpleMapProps {
 
 export default function SimpleMap({ predictions, selectedSpecies, onLocationSelect }: SimpleMapProps) {
   const filteredPredictions = predictions.filter(p => p.species === selectedSpecies);
-  
-  const getBackgroundImage = () => {
+
+  const getMapImage = () => {
     switch (selectedSpecies) {
       case 'cherry':
         return cherryBloomMap;
@@ -44,38 +44,65 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
-  return (
-    <div className="w-full h-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg relative overflow-hidden">
-      {/* 배경 이미지 */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: `url(${getBackgroundImage()})` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-background/60" />
-      
-      <div className="relative h-full overflow-auto p-6">
-        <div className="text-center mb-6">
-          <div className="text-4xl mb-2">🗺️</div>
-          <h3 className="text-lg font-semibold">
-            {SPECIES_CONFIG[selectedSpecies].name} 예측 지역
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            {filteredPredictions.length}개 지역 예측 데이터
-          </p>
-        </div>
+  const getStatusColor = (days: number) => {
+    if (days < 0) return 'bg-gray-500';
+    if (days < 7) return 'bg-red-500';
+    if (days < 14) return 'bg-yellow-500';
+    if (days < 30) return 'bg-blue-500';
+    return 'bg-green-500';
+  };
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 max-h-[500px] overflow-y-auto">
-          {filteredPredictions.slice(0, 20).map((prediction) => (
-            <Card 
-              key={`${prediction.region_code}-${prediction.species}`}
-              className="hover:shadow-lg transition-all duration-200 cursor-pointer hover-scale"
+  const getStatusText = (days: number) => {
+    if (days < 0) return '개화 완료';
+    if (days < 7) return '개화 임박';
+    if (days < 14) return '곧 개화';
+    if (days < 30) return '개화 예정';
+    return '개화 준비';
+  };
+
+  // 예측일 기준 3일 전/5일 후 날짜 계산 함수 추가
+  const getBestEarlyDate = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() - 3);
+    return formatDate(date.toISOString());
+  };
+  const getBestLateDate = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 5);
+    return formatDate(date.toISOString());
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center overflow-auto p-2">
+      {/* 지도 이미지 */}
+      <div className="w-full flex justify-center mb-6">
+        <img
+          src={getMapImage()}
+          alt={`${SPECIES_CONFIG[selectedSpecies].name} 개화 예측 지도`}
+          className="max-w-2xl w-full h-auto rounded-xl shadow-lg border object-contain bg-white"
+          style={{ background: '#fff', maxHeight: '70vh' }}
+        />
+      </div>
+
+      {/* 지역별 카드 그리드 */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 max-w-7xl mx-auto mb-8">
+        {filteredPredictions.slice(0, 20).map((prediction) => {
+          const daysUntilBloom = getDaysUntilBloom(prediction.predicted_date);
+          const statusColor = getStatusColor(daysUntilBloom);
+          const statusText = getStatusText(daysUntilBloom);
+
+          return (
+            <Card
+              key={`${prediction.region_code}-${selectedSpecies}`}
+              className="hover:shadow-lg transition-all duration-200 cursor-pointer hover-scale border-l-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm"
+              style={{ borderLeftColor: statusColor.replace('bg-', '#') }}
               onClick={() => onLocationSelect(prediction)}
             >
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm flex items-center">
-                  <span className="text-lg mr-2">{SPECIES_CONFIG[prediction.species].icon}</span>
+                  <span className="text-lg mr-2">{SPECIES_CONFIG[selectedSpecies].icon}</span>
                   <div className="flex-1">
-                    <div className="font-medium">{prediction.region_name}</div>
+                    <div className="font-medium text-sm">{prediction.region_name}</div>
                     <div className="text-xs text-muted-foreground font-normal">
                       {prediction.region_code}
                     </div>
@@ -83,36 +110,90 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="space-y-2">
-                  <div className="flex items-center text-xs">
-                    <Calendar className="w-3 h-3 mr-1 text-primary" />
-                    <span>예상: {formatDate(prediction.predicted_date)}</span>
+                <div className="space-y-3">
+                  {/* 예측 날짜 */}
+                  <div className="bg-primary/10 p-2 rounded-lg">
+                    <div className="flex items-center text-xs mb-1">
+                      <Calendar className="w-3 h-3 mr-1 text-primary" />
+                      <span className="font-medium">예상 개화일</span>
+                    </div>
+                    <div className="text-sm font-semibold">
+                      {formatDate(prediction.predicted_date)}
+                    </div>
                   </div>
-                  
+
+                  {/* D-Day */}
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="text-xs">
-                      {getDaysUntilBloom(prediction.predicted_date) > 0 
-                        ? `D-${getDaysUntilBloom(prediction.predicted_date)}`
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${statusColor} text-white border-0`}
+                    >
+                      {daysUntilBloom > 0
+                        ? `D-${daysUntilBloom}`
                         : '개화 완료'
                       }
                     </Badge>
-                    <Button size="sm" variant="ghost" className="h-6 text-xs">
-                      상세보기
-                    </Button>
+                    <Badge variant="secondary" className="text-xs">
+                      {statusText}
+                    </Badge>
                   </div>
+
+                  {/* 신뢰구간 - 최고 빠름/최고 늦음 */}
+                  <div className="text-xs text-muted-foreground">
+                    <div className="flex items-center mb-1">
+                      <Info className="w-3 h-3 mr-1" />
+                      <span>신뢰구간</span>
+                    </div>
+                    <div className="text-xs">
+                      <span className="font-medium">최고 빠름</span> {getBestEarlyDate(prediction.predicted_date)}<br />
+                      <span className="font-medium">최고 늦음</span> {getBestLateDate(prediction.predicted_date)}
+                    </div>
+                  </div>
+
+                  <Button size="sm" variant="ghost" className="w-full h-7 text-xs">
+                    상세 정보 보기
+                  </Button>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
+          );
+        })}
+      </div>
 
-        {filteredPredictions.length > 20 && (
-          <div className="text-center mt-4">
-            <Badge variant="secondary">
-              +{filteredPredictions.length - 20}개 지역 더 있음
-            </Badge>
+      {/* 통계 정보 */}
+      <div className="mt-6 p-4 bg-white/70 dark:bg-gray-800/70 rounded-lg backdrop-blur-sm max-w-4xl w-full mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div>
+            <div className="text-lg font-bold text-primary">
+              {filteredPredictions.filter(p => getDaysUntilBloom(p.predicted_date) < 7).length}
+            </div>
+            <div className="text-xs text-muted-foreground">개화 임박</div>
           </div>
-        )}
+          <div>
+            <div className="text-lg font-bold text-yellow-600">
+              {filteredPredictions.filter(p => {
+                const days = getDaysUntilBloom(p.predicted_date);
+                return days >= 7 && days < 14;
+              }).length}
+            </div>
+            <div className="text-xs text-muted-foreground">곧 개화</div>
+          </div>
+          <div>
+            <div className="text-lg font-bold text-blue-600">
+              {filteredPredictions.filter(p => {
+                const days = getDaysUntilBloom(p.predicted_date);
+                return days >= 14 && days < 30;
+              }).length}
+            </div>
+            <div className="text-xs text-muted-foreground">개화 예정</div>
+          </div>
+          <div>
+            <div className="text-lg font-bold text-green-600">
+              {filteredPredictions.filter(p => getDaysUntilBloom(p.predicted_date) >= 30).length}
+            </div>
+            <div className="text-xs text-muted-foreground">개화 준비</div>
+          </div>
+        </div>
       </div>
     </div>
   );

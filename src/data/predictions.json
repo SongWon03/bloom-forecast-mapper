@@ -1,218 +1,85 @@
 [
-  {
-    "region_code": "11110",
-    "region_name": "서울특별시",
-    "lat": 37.5665,
-    "lon": 126.9780,
-    "species": "cherry",
-    "predicted_date": "2025-04-09",
-    "confidence_low": "2025-04-06",
-    "confidence_high": "2025-04-12",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "11110",
-    "region_name": "서울특별시",
-    "lat": 37.5665,
-    "lon": 126.9780,
-    "species": "forsythia",
-    "predicted_date": "2025-03-28",
-    "confidence_low": "2025-03-25",
-    "confidence_high": "2025-03-31",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "11110",
-    "region_name": "서울특별시",
-    "lat": 37.5665,
-    "lon": 126.9780,
-    "species": "azalea",
-    "predicted_date": "2025-03-27",
-    "confidence_low": "2025-03-24",
-    "confidence_high": "2025-03-30",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "26110",
-    "region_name": "부산광역시",
-    "lat": 35.1796,
-    "lon": 129.0756,
-    "species": "cherry",
-    "predicted_date": "2025-03-27",
-    "confidence_low": "2025-03-24",
-    "confidence_high": "2025-03-30",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "26110",
-    "region_name": "부산광역시",
-    "lat": 35.1796,
-    "lon": 129.0756,
-    "species": "forsythia",
-    "predicted_date": "2025-03-18",
-    "confidence_low": "2025-03-15",
-    "confidence_high": "2025-03-21",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "26110",
-    "region_name": "부산광역시",
-    "lat": 35.1796,
-    "lon": 129.0756,
-    "species": "azalea",
-    "predicted_date": "2025-03-21",
-    "confidence_low": "2025-03-18",
-    "confidence_high": "2025-03-24",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "27110",
-    "region_name": "대구광역시",
-    "lat": 35.8714,
-    "lon": 128.6014,
-    "species": "cherry",
-    "predicted_date": "2025-03-23",
-    "confidence_low": "2025-03-20",
-    "confidence_high": "2025-03-26",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "27110",
-    "region_name": "대구광역시",
-    "lat": 35.8714,
-    "lon": 128.6014,
-    "species": "forsythia",
-    "predicted_date": "2025-03-23",
-    "confidence_low": "2025-03-20",
-    "confidence_high": "2025-03-26",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "27110",
-    "region_name": "대구광역시",
-    "lat": 35.8714,
-    "lon": 128.6014,
-    "species": "azalea",
-    "predicted_date": "2025-03-25",
-    "confidence_low": "2025-03-22",
-    "confidence_high": "2025-03-28",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "41111",
-    "region_name": "경기도 수원시",
-    "lat": 37.2636,
-    "lon": 127.0286,
-    "species": "cherry",
-    "predicted_date": "2025-04-09",
-    "confidence_low": "2025-04-06",
-    "confidence_high": "2025-04-12",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "41111",
-    "region_name": "경기도 수원시",
-    "lat": 37.2636,
-    "lon": 127.0286,
-    "species": "forsythia",
-    "predicted_date": "2025-03-31",
-    "confidence_low": "2025-03-28",
-    "confidence_high": "2025-04-03",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "41111",
-    "region_name": "경기도 수원시",
-    "lat": 37.2636,
-    "lon": 127.0286,
-    "species": "azalea",
-    "predicted_date": "2025-03-31",
-    "confidence_low": "2025-03-28",
-    "confidence_high": "2025-04-03",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "22110",
-    "region_name": "인천광역시",
-    "lat": 37.4563,
-    "lon": 126.7052,
-    "species": "cherry",
-    "predicted_date": "2025-04-07",
-    "confidence_low": "2025-04-04",
-    "confidence_high": "2025-04-10",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "22110",
-    "region_name": "인천광역시",
-    "lat": 37.4563,
-    "lon": 126.7052,
-    "species": "forsythia",
-    "predicted_date": "2025-04-01",
-    "confidence_low": "2025-03-29",
-    "confidence_high": "2025-04-04",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "22110",
-    "region_name": "인천광역시",
-    "lat": 37.4563,
-    "lon": 126.7052,
-    "species": "azalea",
-    "predicted_date": "2025-03-27",
-    "confidence_low": "2025-03-24",
-    "confidence_high": "2025-03-30",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "50110",
-    "region_name": "제주특별자치도",
-    "lat": 33.4996,
-    "lon": 126.5312,
-    "species": "cherry",
-    "predicted_date": "2025-03-27",
-    "confidence_low": "2025-03-24",
-    "confidence_high": "2025-03-30",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "50110",
-    "region_name": "제주특별자치도",
-    "lat": 33.4996,
-    "lon": 126.5312,
-    "species": "forsythia",
-    "predicted_date": "2025-03-23",
-    "confidence_low": "2025-03-20",
-    "confidence_high": "2025-03-26",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  },
-  {
-    "region_code": "50110",
-    "region_name": "제주특별자치도",
-    "lat": 33.4996,
-    "lon": 126.5312,
-    "species": "azalea",
-    "predicted_date": "2025-03-22",
-    "confidence_low": "2025-03-19",
-    "confidence_high": "2025-03-25",
-    "model_version": "v0.0.15",
-    "updated_at": "2025-01-14T09:00:00+09:00"
-  }
+  {"region_code":"11110","region_name":"서울특별시","lat":37.5665,"lon":126.9780,"species":"cherry","predicted_date":"2025-04-01","confidence_low":"2025-04-01","confidence_high":"2025-04-01","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"11110","region_name":"서울특별시","lat":37.5665,"lon":126.9780,"species":"forsythia","predicted_date":"2025-03-28","confidence_low":"2025-03-28","confidence_high":"2025-03-28","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"11110","region_name":"서울특별시","lat":37.5665,"lon":126.9780,"species":"azalea","predicted_date":"2025-03-27","confidence_low":"2025-03-27","confidence_high":"2025-03-27","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"26110","region_name":"부산광역시","lat":35.1796,"lon":129.0756,"species":"cherry","predicted_date":"2025-03-29","confidence_low":"2025-03-29","confidence_high":"2025-03-29","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"26110","region_name":"부산광역시","lat":35.1796,"lon":129.0756,"species":"forsythia","predicted_date":"2025-03-18","confidence_low":"2025-03-18","confidence_high":"2025-03-18","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"26110","region_name":"부산광역시","lat":35.1796,"lon":129.0756,"species":"azalea","predicted_date":"2025-03-21","confidence_low":"2025-03-21","confidence_high":"2025-03-21","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"27110","region_name":"대구광역시","lat":35.8714,"lon":128.6014,"species":"cherry","predicted_date":"2025-03-30","confidence_low":"2025-03-30","confidence_high":"2025-03-30","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"27110","region_name":"대구광역시","lat":35.8714,"lon":128.6014,"species":"forsythia","predicted_date":"2025-03-17","confidence_low":"2025-03-17","confidence_high":"2025-03-17","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"27110","region_name":"대구광역시","lat":35.8714,"lon":128.6014,"species":"azalea","predicted_date":"2025-03-22","confidence_low":"2025-03-22","confidence_high":"2025-03-22","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"22110","region_name":"인천광역시","lat":37.4563,"lon":126.7052,"species":"cherry","predicted_date":"2025-04-01","confidence_low":"2025-04-01","confidence_high":"2025-04-01","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"22110","region_name":"인천광역시","lat":37.4563,"lon":126.7052,"species":"forsythia","predicted_date":"2025-04-01","confidence_low":"2025-04-01","confidence_high":"2025-04-01","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"22110","region_name":"인천광역시","lat":37.4563,"lon":126.7052,"species":"azalea","predicted_date":"2025-03-27","confidence_low":"2025-03-27","confidence_high":"2025-03-27","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"28110","region_name":"광주광역시","lat":35.1595,"lon":126.8526,"species":"cherry","predicted_date":"2025-03-30","confidence_low":"2025-03-30","confidence_high":"2025-03-30","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"28110","region_name":"광주광역시","lat":35.1595,"lon":126.8526,"species":"forsythia","predicted_date":"2025-03-19","confidence_low":"2025-03-19","confidence_high":"2025-03-19","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"28110","region_name":"광주광역시","lat":35.1595,"lon":126.8526,"species":"azalea","predicted_date":"2025-03-27","confidence_low":"2025-03-27","confidence_high":"2025-03-27","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"30110","region_name":"대전광역시","lat":36.3504,"lon":127.3845,"species":"cherry","predicted_date":"2025-04-03","confidence_low":"2025-04-03","confidence_high":"2025-04-03","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"30110","region_name":"대전광역시","lat":36.3504,"lon":127.3845,"species":"forsythia","predicted_date":"2025-03-25","confidence_low":"2025-03-25","confidence_high":"2025-03-25","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"30110","region_name":"대전광역시","lat":36.3504,"lon":127.3845,"species":"azalea","predicted_date":"2025-03-25","confidence_low":"2025-03-25","confidence_high":"2025-03-25","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"36110","region_name":"세종특별자치시","lat":36.4801,"lon":127.2891,"species":"cherry","predicted_date":"2025-04-03","confidence_low":"2025-04-03","confidence_high":"2025-04-03","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"36110","region_name":"세종특별자치시","lat":36.4801,"lon":127.2891,"species":"forsythia","predicted_date":"2025-03-25","confidence_low":"2025-03-25","confidence_high":"2025-03-25","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"36110","region_name":"세종특별자치시","lat":36.4801,"lon":127.2891,"species":"azalea","predicted_date":"2025-03-25","confidence_low":"2025-03-25","confidence_high":"2025-03-25","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"43110","region_name":"충청북도 청주시","lat":36.6424,"lon":127.4890,"species":"cherry","predicted_date":"2025-04-06","confidence_low":"2025-04-06","confidence_high":"2025-04-06","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"43110","region_name":"충청북도 청주시","lat":36.6424,"lon":127.4890,"species":"forsythia","predicted_date":"2025-03-26","confidence_low":"2025-03-26","confidence_high":"2025-03-26","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"43110","region_name":"충청북도 청주시","lat":36.6424,"lon":127.4890,"species":"azalea","predicted_date":"2025-03-28","confidence_low":"2025-03-28","confidence_high":"2025-03-28","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"45110","region_name":"전라북도 전주시","lat":35.8242,"lon":127.1480,"species":"cherry","predicted_date":"2025-04-03","confidence_low":"2025-04-03","confidence_high":"2025-04-03","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"45110","region_name":"전라북도 전주시","lat":35.8242,"lon":127.1480,"species":"forsythia","predicted_date":"2025-03-24","confidence_low":"2025-03-24","confidence_high":"2025-03-24","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"45110","region_name":"전라북도 전주시","lat":35.8242,"lon":127.1480,"species":"azalea","predicted_date":"2025-03-28","confidence_low":"2025-03-28","confidence_high":"2025-03-28","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"46110","region_name":"전라남도 여수시","lat":34.7604,"lon":127.6622,"species":"cherry","predicted_date":"2025-04-03","confidence_low":"2025-04-03","confidence_high":"2025-04-03","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"46110","region_name":"전라남도 여수시","lat":34.7604,"lon":127.6622,"species":"forsythia","predicted_date":"2025-03-23","confidence_low":"2025-03-23","confidence_high":"2025-03-23","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"46110","region_name":"전라남도 여수시","lat":34.7604,"lon":127.6622,"species":"azalea","predicted_date":"2025-03-25","confidence_low":"2025-03-25","confidence_high":"2025-03-25","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"46130","region_name":"전라남도 목포시","lat":34.8118,"lon":126.3922,"species":"cherry","predicted_date":"2025-04-02","confidence_low":"2025-04-02","confidence_high":"2025-04-02","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"46130","region_name":"전라남도 목포시","lat":34.8118,"lon":126.3922,"species":"forsythia","predicted_date":"2025-03-23","confidence_low":"2025-03-23","confidence_high":"2025-03-23","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"46130","region_name":"전라남도 목포시","lat":34.8118,"lon":126.3922,"species":"azalea","predicted_date":"2025-03-22","confidence_low":"2025-03-22","confidence_high":"2025-03-22","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"44210","region_name":"충청남도 서산시","lat":36.7845,"lon":126.4503,"species":"cherry","predicted_date":"2025-04-11","confidence_low":"2025-04-11","confidence_high":"2025-04-11","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"44210","region_name":"충청남도 서산시","lat":36.7845,"lon":126.4503,"species":"forsythia","predicted_date":"2025-03-30","confidence_low":"2025-03-30","confidence_high":"2025-03-30","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"44210","region_name":"충청남도 서산시","lat":36.7845,"lon":126.4503,"species":"azalea","predicted_date":"2025-03-27","confidence_low":"2025-03-27","confidence_high":"2025-03-27","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"48121","region_name":"경상남도 창원시","lat":35.2285,"lon":128.6811,"species":"cherry","predicted_date":"2025-03-29","confidence_low":"2025-03-29","confidence_high":"2025-03-29","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"48121","region_name":"경상남도 창원시","lat":35.2285,"lon":128.6811,"species":"forsythia","predicted_date":"2025-03-20","confidence_low":"2025-03-20","confidence_high":"2025-03-20","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"48121","region_name":"경상남도 창원시","lat":35.2285,"lon":128.6811,"species":"azalea","predicted_date":"2025-03-22","confidence_low":"2025-03-22","confidence_high":"2025-03-22","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"42110","region_name":"강원도 강릉시","lat":37.7519,"lon":128.8761,"species":"cherry","predicted_date":"2025-04-09","confidence_low":"2025-04-09","confidence_high":"2025-04-09","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"42110","region_name":"강원도 강릉시","lat":37.7519,"lon":128.8761,"species":"forsythia","predicted_date":"2025-03-24","confidence_low":"2025-03-24","confidence_high":"2025-03-24","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"42110","region_name":"강원도 강릉시","lat":37.7519,"lon":128.8761,"species":"azalea","predicted_date":"2025-04-02","confidence_low":"2025-04-02","confidence_high":"2025-04-02","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"47170","region_name":"경상북도 안동시","lat":36.5684,"lon":128.7294,"species":"cherry","predicted_date":"2025-04-04","confidence_low":"2025-04-04","confidence_high":"2025-04-04","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"47170","region_name":"경상북도 안동시","lat":36.5684,"lon":128.7294,"species":"forsythia","predicted_date":"2025-03-27","confidence_low":"2025-03-27","confidence_high":"2025-03-27","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"47170","region_name":"경상북도 안동시","lat":36.5684,"lon":128.7294,"species":"azalea","predicted_date":"2025-03-29","confidence_low":"2025-03-29","confidence_high":"2025-03-29","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"29110","region_name":"울산광역시","lat":35.5384,"lon":129.3114,"species":"cherry","predicted_date":"2025-03-29","confidence_low":"2025-03-29","confidence_high":"2025-03-29","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"29110","region_name":"울산광역시","lat":35.5384,"lon":129.3114,"species":"forsythia","predicted_date":"2025-03-20","confidence_low":"2025-03-20","confidence_high":"2025-03-20","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"29110","region_name":"울산광역시","lat":35.5384,"lon":129.3114,"species":"azalea","predicted_date":"2025-03-20","confidence_low":"2025-03-20","confidence_high":"2025-03-20","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"47190","region_name":"경상북도 포항시","lat":36.0190,"lon":129.3435,"species":"cherry","predicted_date":"2025-03-28","confidence_low":"2025-03-28","confidence_high":"2025-03-28","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"47190","region_name":"경상북도 포항시","lat":36.0190,"lon":129.3435,"species":"forsythia","predicted_date":"2025-03-17","confidence_low":"2025-03-17","confidence_high":"2025-03-17","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"47190","region_name":"경상북도 포항시","lat":36.0190,"lon":129.3435,"species":"azalea","predicted_date":"2025-03-20","confidence_low":"2025-03-20","confidence_high":"2025-03-20","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"47920","region_name":"경상북도 울릉군","lat":37.4847,"lon":130.9051,"species":"cherry","predicted_date":"2025-04-09","confidence_low":"2025-04-09","confidence_high":"2025-04-09","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"47920","region_name":"경상북도 울릉군","lat":37.4847,"lon":130.9051,"species":"forsythia","predicted_date":"2025-03-27","confidence_low":"2025-03-27","confidence_high":"2025-03-27","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"47920","region_name":"경상북도 울릉군","lat":37.4847,"lon":130.9051,"species":"azalea","predicted_date":"2025-03-30","confidence_low":"2025-03-30","confidence_high":"2025-03-30","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"46130","region_name":"전라남도 순천시","lat":34.9506,"lon":127.4872,"species":"cherry","predicted_date":"2025-04-10","confidence_low":"2025-04-10","confidence_high":"2025-04-10","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"46130","region_name":"전라남도 순천시","lat":34.9506,"lon":127.4872,"species":"forsythia","predicted_date":"2025-04-04","confidence_low":"2025-04-04","confidence_high":"2025-04-04","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"46130","region_name":"전라남도 순천시","lat":34.9506,"lon":127.4872,"species":"azalea","predicted_date":"2025-04-05","confidence_low":"2025-04-05","confidence_high":"2025-04-05","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"48121","region_name":"경상남도 창원시","lat":35.2285,"lon":128.6811,"species":"cherry","predicted_date":"2025-03-29","confidence_low":"2025-03-29","confidence_high":"2025-03-29","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"48121","region_name":"경상남도 창원시","lat":35.2285,"lon":128.6811,"species":"forsythia","predicted_date":"2025-03-20","confidence_low":"2025-03-20","confidence_high":"2025-03-20","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"48121","region_name":"경상남도 창원시","lat":35.2285,"lon":128.6811,"species":"azalea","predicted_date":"2025-03-22","confidence_low":"2025-03-22","confidence_high":"2025-03-22","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+
+  {"region_code":"50130","region_name":"제주특별자치도 서귀포시","lat":33.2530,"lon":126.5586,"species":"cherry","predicted_date":"2025-03-26","confidence_low":"2025-03-26","confidence_high":"2025-03-26","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"50130","region_name":"제주특별자치도 서귀포시","lat":33.2530,"lon":126.5586,"species":"forsythia","predicted_date":"2025-03-15","confidence_low":"2025-03-15","confidence_high":"2025-03-15","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"},
+  {"region_code":"50130","region_name":"제주특별자치도 서귀포시","lat":33.2530,"lon":126.5586,"species":"azalea","predicted_date":"2025-03-18","confidence_low":"2025-03-18","confidence_high":"2025-03-18","model_version":"v0.0.15","updated_at":"2025-01-14T09:00:00+09:00"}
 ]

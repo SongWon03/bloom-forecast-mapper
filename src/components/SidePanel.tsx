@@ -44,6 +44,18 @@ export default function SidePanel({ prediction, onClose }: SidePanelProps) {
     return '개화 예정';
   };
 
+  // 예측일 기준 3일 전/5일 후 날짜 계산 함수 추가
+  const getBestEarlyDate = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() - 3);
+    return formatDate(date.toISOString());
+  };
+  const getBestLateDate = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 5);
+    return formatDate(date.toISOString());
+  };
+
   const speciesConfig = SPECIES_CONFIG[prediction.species];
   const daysUntilBloom = getDaysUntilBloom(prediction.predicted_date);
 
@@ -92,7 +104,15 @@ export default function SidePanel({ prediction, onClose }: SidePanelProps) {
                 <span className="text-sm text-muted-foreground">예상 개화일</span>
                 <span className="font-semibold">{formatDate(prediction.predicted_date)}</span>
               </div>
-              
+              {/* 최고 빠름/최고 늦음 구간 */}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground">최고 빠름</span>
+                <span className="text-sm">{getBestEarlyDate(prediction.predicted_date)}</span>
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground">최고 늦음</span>
+                <span className="text-sm">{getBestLateDate(prediction.predicted_date)}</span>
+              </div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-muted-foreground">95% 신뢰구간</span>
                 <span className="text-sm">
@@ -100,7 +120,6 @@ export default function SidePanel({ prediction, onClose }: SidePanelProps) {
                   {new Date(prediction.confidence_high).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                 </span>
               </div>
-              
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">모델 버전</span>
                 <Badge variant="outline" className="text-xs">{prediction.model_version}</Badge>

@@ -53,6 +53,18 @@ const Index = () => {
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
 
+  // 예측일 기준 3일 전/5일 후 날짜 계산 함수 추가
+  const getBestEarlyDate = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() - 3);
+    return formatDetailDate(date.toISOString());
+  };
+  const getBestLateDate = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 5);
+    return formatDetailDate(date.toISOString());
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -65,29 +77,8 @@ const Index = () => {
             </h1>
             <h2 className="text-3xl font-bold mb-4">2025 Bloom Map</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              PhenoFACT AI로 예측한 전국 봄꽃 개화 지도
+              PhenoFACT python package로 예측한 전국 봄꽃 개화 지도
             </p>
-          </div>
-          
-          {/* Quick Stats */}
-          <div className="grid md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            {Object.values(SPECIES_CONFIG).map((config, index) => {
-              const stats = getSpeciesStats(config.key);
-              return (
-                <Card key={config.key} className="bg-white/80 dark:bg-card/80 backdrop-blur-sm border-0 shadow-lg hover-scale animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-                  <CardContent className="pt-6">
-                    <div className="text-3xl mb-3">{config.icon}</div>
-                    <div className="font-semibold text-lg">{config.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {stats.total}곳 예측
-                    </div>
-                    <div className="text-xs text-primary font-medium mt-1">
-                      {stats.blooming}곳 곧 개화
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
           </div>
         </div>
       </div>
@@ -109,7 +100,7 @@ const Index = () => {
             
             <Badge variant="secondary" className="text-sm font-medium">
               <TrendingUp className="w-4 h-4 mr-1" />
-              PhenoFACT v0.0.15 AI 예측
+              PhenoFACT v0.0.15 Python 패키지 예측
             </Badge>
           </div>
           
@@ -145,9 +136,9 @@ const Index = () => {
                 <span className="text-2xl mr-3">{SPECIES_CONFIG[selectedSpecies].icon}</span>
                 <div>
                   <div className="text-xl font-bold">{SPECIES_CONFIG[selectedSpecies].name} 개화 예측 지도</div>
-                  <div className="text-sm text-muted-foreground font-normal">
-                    {predictions.filter(p => p.species === selectedSpecies).length}개 지역 AI 예측 데이터
-                  </div>
+                              <div className="text-sm text-muted-foreground font-normal">
+              {predictions.filter(p => p.species === selectedSpecies).length}개 지역 PhenoFACT 예측 데이터
+            </div>
                 </div>
               </div>
               <Badge variant="outline" className="bg-primary/10 border-primary/30">
@@ -159,7 +150,7 @@ const Index = () => {
           <CardContent className="p-0 h-full">
             <div className="h-full">
               <SimpleMap
-                predictions={predictions}
+                predictions={predictions.filter(p => p.species === selectedSpecies)}
                 selectedSpecies={selectedSpecies}
                 onLocationSelect={handleLocationSelect}
               />
@@ -208,12 +199,12 @@ const Index = () => {
                 <div className="text-sm font-medium">예측 신뢰 구간</div>
                 <div className="bg-muted/50 p-3 rounded-lg space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">최빠름</span>
-                    <span className="font-medium">{formatDetailDate(selectedLocation.confidence_low)}</span>
+                    <span className="text-muted-foreground">최고 빠름</span>
+                    <span className="font-medium">{getBestEarlyDate(selectedLocation.predicted_date)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">최늦음</span>
-                    <span className="font-medium">{formatDetailDate(selectedLocation.confidence_high)}</span>
+                    <span className="text-muted-foreground">최고 늦음</span>
+                    <span className="font-medium">{getBestLateDate(selectedLocation.predicted_date)}</span>
                   </div>
                 </div>
               </div>
@@ -221,7 +212,7 @@ const Index = () => {
               {/* 모델 정보 */}
               <div className="bg-muted/30 p-3 rounded-lg">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">AI 모델</span>
+                                      <span className="text-muted-foreground">PhenoFACT 모델</span>
                   <Badge variant="secondary" className="text-xs">
                     {selectedLocation.model_version}
                   </Badge>

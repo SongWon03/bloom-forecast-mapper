@@ -52,7 +52,7 @@ export const SPECIES_CONFIG: Record<string, SpeciesConfig> = {
     key: 'forsythia',
     name: '개나리',
     color: 'flower-forsythia',
-    icon: '🌼'
+    icon: '🟡'
   },
   azalea: {
     key: 'azalea',
