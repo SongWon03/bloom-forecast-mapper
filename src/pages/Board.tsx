@@ -6,24 +6,81 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Search, Calendar, MapPin, User } from "lucide-react";
-import { Sighting, SPECIES_CONFIG } from "@/types";
+import { SPECIES_CONFIG } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface SimpleSighting {
+  id: string;
+  user_id: string;
+  region_name: string;
+  lat: number;
+  lon: number;
+  species: 'cherry' | 'forsythia' | 'azalea';
+  stage: 'bud' | 'bloom';
+  date: string;
+  photo_url?: string;
+  memo?: string;
+  created_at: string;
+  nickname: string;
+}
 
 export default function Board() {
-  const [sightings, setSightings] = useState<Sighting[]>([]);
-  const [filteredSightings, setFilteredSightings] = useState<Sighting[]>([]);
+  const [sightings, setSightings] = useState<SimpleSighting[]>([]);
+  const [filteredSightings, setFilteredSightings] = useState<SimpleSighting[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [speciesFilter, setSpeciesFilter] = useState("all");
   const [stageFilter, setStageFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Load sightings from localStorage
-    const stored = localStorage.getItem("bloom-sightings");
-    if (stored) {
-      const data = JSON.parse(stored);
-      setSightings(data);
-      setFilteredSightings(data);
-    }
+    fetchSightings();
   }, []);
+
+  const fetchSightings = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('sightings')
+      .select(`
+        id,
+        user_id,
+        region_name,
+        lat,
+        lon,
+        species,
+        stage,
+        date,
+        photo_url,
+        memo,
+        created_at,
+        profiles(nickname)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching sightings:', error);
+    } else {
+      // Transform data to match our interface
+      const transformedData: SimpleSighting[] = (data || []).map(item => ({
+        id: item.id,
+        user_id: item.user_id,
+        region_name: item.region_name,
+        lat: item.lat,
+        lon: item.lon,
+        species: item.species as 'cherry' | 'forsythia' | 'azalea',
+        stage: item.stage as 'bud' | 'bloom',
+        date: item.date,
+        photo_url: item.photo_url,
+        memo: item.memo,
+        created_at: item.created_at,
+        nickname: (item.profiles as any)?.nickname || '익명'
+      }));
+      setSightings(transformedData);
+      setFilteredSightings(transformedData);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     // Apply filters
@@ -65,12 +122,14 @@ export default function Board() {
             전국의 개화 현황을 공유하고 확인해보세요
           </p>
         </div>
-        <Button asChild className="btn-bloom">
-          <Link to="/board/new">
-            <Plus className="w-4 h-4 mr-2" />
-            제보하기
-          </Link>
-        </Button>
+        {user && (
+          <Button asChild className="btn-bloom">
+            <Link to="/board/new">
+              <Plus className="w-4 h-4 mr-2" />
+              제보하기
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Filters */}
@@ -114,7 +173,25 @@ export default function Board() {
       </div>
 
       {/* Sightings Grid */}
-      {filteredSightings.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader>
+                <div className="h-4 bg-muted rounded w-1/2"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="aspect-[4/3] bg-muted rounded-lg mb-3"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded w-1/2"></div>
+                  <div className="h-4 bg-muted rounded w-2/3"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : filteredSightings.length === 0 ? (
         <Card className="text-center py-16">
           <CardContent>
             <div className="text-6xl mb-4">🌸</div>
@@ -127,11 +204,18 @@ export default function Board() {
                 : "다른 검색 조건을 시도해보세요."
               }
             </CardDescription>
-            {sightings.length === 0 && (
+            {sightings.length === 0 && user && (
               <Button asChild className="btn-bloom">
                 <Link to="/board/new">
                   <Plus className="w-4 h-4 mr-2" />
                   제보하기
+                </Link>
+              </Button>
+            )}
+            {!user && (
+              <Button asChild variant="outline">
+                <Link to="/login">
+                  로그인 후 제보하기
                 </Link>
               </Button>
             )}

@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
+  useEffect(() => {
+    // Check if user is already logged in
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/');
+      }
+    };
+    checkSession();
+  }, [navigate]);
+
+  const handleLogin = async () => {
     if (!email || !password) {
       toast({
         title: "입력 오류",
@@ -22,13 +37,29 @@ export default function Login() {
       return;
     }
     
-    toast({
-      title: "로그인 성공",
-      description: "환영합니다! (Stage 1 프로토타입)",
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
+
+    if (error) {
+      toast({
+        title: "로그인 실패",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "로그인 성공",
+        description: "환영합니다!",
+      });
+      navigate('/');
+    }
+    setLoading(false);
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!email || !password || !nickname) {
       toast({
         title: "입력 오류",
@@ -38,10 +69,35 @@ export default function Login() {
       return;
     }
     
-    toast({
-      title: "회원가입 성공",
-      description: `${nickname}님, 가입을 환영합니다! (Stage 1 프로토타입)`,
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          nickname: nickname
+        },
+        emailRedirectTo: `${window.location.origin}/`
+      }
     });
+
+    if (error) {
+      toast({
+        title: "회원가입 실패",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "회원가입 성공",
+        description: "계정이 생성되었습니다! 로그인해주세요.",
+      });
+      // Reset form
+      setEmail("");
+      setPassword("");
+      setNickname("");
+    }
+    setLoading(false);
   };
 
   return (
@@ -84,8 +140,8 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button onClick={handleLogin} className="w-full btn-bloom">
-                로그인
+              <Button onClick={handleLogin} className="w-full btn-bloom" disabled={loading}>
+                {loading ? "로그인 중..." : "로그인"}
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -131,8 +187,8 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button onClick={handleSignup} className="w-full btn-bloom">
-                회원가입
+              <Button onClick={handleSignup} className="w-full btn-bloom" disabled={loading}>
+                {loading ? "회원가입 중..." : "회원가입"}
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

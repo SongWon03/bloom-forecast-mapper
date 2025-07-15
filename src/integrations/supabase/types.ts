@@ -14,13 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      predictions: {
+        Row: {
+          confidence_high: string
+          confidence_low: string
+          id: string
+          lat: number
+          lon: number
+          model_version: string
+          predicted_date: string
+          region_code: string
+          region_name: string
+          species: string
+          updated_at: string
+        }
+        Insert: {
+          confidence_high: string
+          confidence_low: string
+          id?: string
+          lat: number
+          lon: number
+          model_version: string
+          predicted_date: string
+          region_code: string
+          region_name: string
+          species: string
+          updated_at?: string
+        }
+        Update: {
+          confidence_high?: string
+          confidence_low?: string
+          id?: string
+          lat?: number
+          lon?: number
+          model_version?: string
+          predicted_date?: string
+          region_code?: string
+          region_name?: string
+          species?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          last_report: string | null
+          nickname: string
+          points: number
+          reports: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_report?: string | null
+          nickname: string
+          points?: number
+          reports?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_report?: string | null
+          nickname?: string
+          points?: number
+          reports?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sightings: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          lat: number
+          lon: number
+          memo: string | null
+          photo_url: string | null
+          region_name: string
+          species: string
+          stage: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          lat: number
+          lon: number
+          memo?: string | null
+          photo_url?: string | null
+          region_name: string
+          species: string
+          stage: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          lat?: number
+          lon?: number
+          memo?: string | null
+          photo_url?: string | null
+          region_name?: string
+          species?: string
+          stage?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_user_stats: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

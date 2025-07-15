@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,20 +14,50 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { Sighting, SPECIES_CONFIG } from "@/types";
+import { SPECIES_CONFIG } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function BoardNew() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const [species, setSpecies] = useState<'cherry' | 'forsythia' | 'azalea'>('cherry');
   const [stage, setStage] = useState<'bud' | 'bloom'>('bloom');
   const [regionName, setRegionName] = useState("");
   const [date, setDate] = useState<Date>();
   const [memo, setMemo] = useState("");
-  const [nickname, setNickname] = useState("익명사용자");
+  const [loading, setLoading] = useState(false);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 1024 * 1024) { // 1MB
+        toast({
+          title: "파일 크기 초과",
+          description: "파일 크기는 1MB 이하로 업로드해주세요.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setPhotoFile(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     if (!regionName || !date) {
       toast({
         title: "입력 오류",
@@ -37,36 +67,65 @@ export default function BoardNew() {
       return;
     }
 
-    const newSighting: Sighting = {
-      id: Date.now().toString(),
-      user_id: "user-1",
-      nickname,
-      region_name: regionName,
-      lat: 37.5665 + (Math.random() - 0.5) * 0.1, // Random coordinates around Seoul
-      lon: 126.9780 + (Math.random() - 0.5) * 0.1,
-      species,
-      stage,
-      date: format(date, 'yyyy-MM-dd'),
-      memo: memo || undefined,
-      created_at: new Date().toISOString()
-    };
+    setLoading(true);
 
-    // Save to localStorage
-    const existing = localStorage.getItem("bloom-sightings");
-    const sightings = existing ? JSON.parse(existing) : [];
-    sightings.unshift(newSighting);
-    localStorage.setItem("bloom-sightings", JSON.stringify(sightings));
+    try {
+      let photoUrl = null;
 
-    // Simulate points update
-    const currentPoints = parseInt(localStorage.getItem("user-points") || "0");
-    localStorage.setItem("user-points", String(currentPoints + 10));
+      // Upload photo if provided
+      if (photoFile) {
+        const fileExt = photoFile.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('sighting-photos')
+          .upload(fileName, photoFile);
 
-    toast({
-      title: "제보 완료!",
-      description: `개화 정보가 등록되었습니다. +10 포인트 획득!`,
-    });
+        if (uploadError) {
+          console.error('Photo upload error:', uploadError);
+        } else {
+          const { data: { publicUrl } } = supabase.storage
+            .from('sighting-photos')
+            .getPublicUrl(fileName);
+          photoUrl = publicUrl;
+        }
+      }
 
-    navigate('/board');
+      // Create sighting record
+      const { error } = await supabase
+        .from('sightings')
+        .insert({
+          user_id: user.id,
+          region_name: regionName,
+          lat: 37.5665 + (Math.random() - 0.5) * 0.1, // Random coordinates around Seoul
+          lon: 126.9780 + (Math.random() - 0.5) * 0.1,
+          species,
+          stage,
+          date: format(date, 'yyyy-MM-dd'),
+          photo_url: photoUrl,
+          memo: memo || null,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "제보 완료!",
+        description: `개화 정보가 등록되었습니다. +10 포인트 획득!`,
+      });
+
+      navigate('/board');
+    } catch (error) {
+      console.error('Error submitting sighting:', error);
+      toast({
+        title: "제보 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -86,15 +145,11 @@ export default function BoardNew() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Nickname */}
-          <div className="space-y-2">
-            <Label htmlFor="nickname">닉네임</Label>
-            <Input
-              id="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="익명사용자"
-            />
+          {/* User Info */}
+          <div className="p-3 bg-muted/50 rounded-lg">
+            <p className="text-sm text-muted-foreground">
+              제보자: <span className="font-medium">{user?.user_metadata?.nickname || '사용자'}</span>
+            </p>
           </div>
 
           {/* Species Selection */}
@@ -188,11 +243,20 @@ export default function BoardNew() {
             <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
               <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground mb-2">
-                사진을 드래그하거나 클릭하여 업로드
+                {photoFile ? `선택된 파일: ${photoFile.name}` : "사진을 클릭하여 업로드"}
               </p>
-              <Button variant="outline" size="sm">
-                파일 선택
+              <Button variant="outline" size="sm" asChild>
+                <label htmlFor="photo-upload" className="cursor-pointer">
+                  파일 선택
+                </label>
               </Button>
+              <input
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
               <p className="text-xs text-muted-foreground mt-2">
                 최대 1MB, JPG/PNG 형식
               </p>
@@ -216,8 +280,8 @@ export default function BoardNew() {
             <Button variant="outline" onClick={() => navigate('/board')} className="flex-1">
               취소
             </Button>
-            <Button onClick={handleSubmit} className="btn-bloom flex-1">
-              제보하기
+            <Button onClick={handleSubmit} className="btn-bloom flex-1" disabled={loading}>
+              {loading ? "제보 중..." : "제보하기"}
             </Button>
           </div>
         </CardContent>

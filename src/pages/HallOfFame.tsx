@@ -2,42 +2,48 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, Star, Crown } from "lucide-react";
-import { User } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
+
+interface LeaderboardUser {
+  id: string;
+  nickname: string;
+  points: number;
+  reports: number;
+  last_report?: string;
+}
 
 export default function HallOfFame() {
-  const [leaderboard, setLeaderboard] = useState<User[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Generate mock leaderboard data
-    const mockUsers: User[] = [
-      { id: "1", nickname: "꽃사랑이", points: 250, reports: 25, last_report: "2025-04-10" },
-      { id: "2", nickname: "봄소식", points: 220, reports: 22, last_report: "2025-04-09" },
-      { id: "3", nickname: "벚꽃지기", points: 190, reports: 19, last_report: "2025-04-08" },
-      { id: "4", nickname: "개나리헌터", points: 180, reports: 18, last_report: "2025-04-07" },
-      { id: "5", nickname: "진달래요정", points: 170, reports: 17, last_report: "2025-04-06" },
-      { id: "6", nickname: "꽃구경러", points: 150, reports: 15, last_report: "2025-04-05" },
-      { id: "7", nickname: "봄맞이", points: 140, reports: 14, last_report: "2025-04-04" },
-      { id: "8", nickname: "꽃소식통", points: 130, reports: 13, last_report: "2025-04-03" },
-      { id: "9", nickname: "자연관찰자", points: 120, reports: 12, last_report: "2025-04-02" },
-      { id: "10", nickname: "꽃피는마을", points: 110, reports: 11, last_report: "2025-04-01" }
-    ];
-
-    // Add current user points from localStorage if exists
-    const userPoints = parseInt(localStorage.getItem("user-points") || "0");
-    if (userPoints > 0) {
-      mockUsers.push({
-        id: "current",
-        nickname: "나",
-        points: userPoints,
-        reports: Math.floor(userPoints / 10),
-        last_report: new Date().toISOString().split('T')[0]
-      });
-    }
-
-    // Sort by points
-    mockUsers.sort((a, b) => b.points - a.points);
-    setLeaderboard(mockUsers);
+    fetchLeaderboard();
   }, []);
+
+  const fetchLeaderboard = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, nickname, points, reports, last_report')
+      .order('points', { ascending: false })
+      .limit(20);
+
+    if (error) {
+      console.error('Error fetching leaderboard:', error);
+      // Fallback to mock data on error
+      const mockUsers: LeaderboardUser[] = [
+        { id: "1", nickname: "꽃사랑이", points: 250, reports: 25, last_report: "2025-04-10" },
+        { id: "2", nickname: "봄소식", points: 220, reports: 22, last_report: "2025-04-09" },
+        { id: "3", nickname: "벚꽃지기", points: 190, reports: 19, last_report: "2025-04-08" },
+        { id: "4", nickname: "개나리헌터", points: 180, reports: 18, last_report: "2025-04-07" },
+        { id: "5", nickname: "진달래요정", points: 170, reports: 17, last_report: "2025-04-06" },
+      ];
+      setLeaderboard(mockUsers);
+    } else {
+      setLeaderboard(data || []);
+    }
+    setLoading(false);
+  };
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -152,21 +158,33 @@ export default function HallOfFame() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {leaderboard.map((user, index) => {
-                const rank = index + 1;
-                const badge = getPointsBadge(user.points);
-                const isCurrentUser = user.id === "current";
+            {loading ? (
+              <div className="space-y-3">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 rounded-lg border animate-pulse">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-6 h-6 bg-muted rounded"></div>
+                      <div className="h-4 bg-muted rounded w-20"></div>
+                      <div className="h-4 bg-muted rounded w-32"></div>
+                    </div>
+                    <div className="text-right">
+                      <div className="h-6 bg-muted rounded w-16 mb-1"></div>
+                      <div className="h-4 bg-muted rounded w-12"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {leaderboard.map((user, index) => {
+                  const rank = index + 1;
+                  const badge = getPointsBadge(user.points);
                 
                 return (
                   <div
                     key={user.id}
                     className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
-                      isCurrentUser 
-                        ? 'bg-primary/10 border-primary' 
-                        : rank <= 3 
-                        ? 'bg-muted/50' 
-                        : 'hover:bg-muted/30'
+                      rank <= 3 ? 'bg-muted/50' : 'hover:bg-muted/30'
                     }`}
                   >
                     <div className="flex items-center space-x-4">
@@ -177,13 +195,12 @@ export default function HallOfFame() {
                       
                       <div>
                         <div className="flex items-center space-x-2">
-                          <span className={`font-medium ${isCurrentUser ? 'text-primary font-bold' : ''}`}>
+                          <span className="font-medium">
                             {user.nickname}
-                            {isCurrentUser && <Badge variant="secondary" className="ml-2">나</Badge>}
                           </span>
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          마지막 제보: {new Date(user.last_report || '').toLocaleDateString('ko-KR')}
+                          마지막 제보: {user.last_report ? new Date(user.last_report).toLocaleDateString('ko-KR') : '없음'}
                         </div>
                       </div>
                     </div>
@@ -195,10 +212,11 @@ export default function HallOfFame() {
                         {badge.emoji} {badge.title}
                       </Badge>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
       </section>
