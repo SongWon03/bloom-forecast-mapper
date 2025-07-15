@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar } from "lucide-react";
 import { Prediction, SPECIES_CONFIG } from "@/types";
+import cherryBloomMap from "@/assets/cherry-bloom-map.png";
+import forsythiaBloomMap from "@/assets/forsythia-bloom-map.png";
+import azaleaBloomMap from "@/assets/azalea-bloom-map.png";
 
 interface SimpleMapProps {
   predictions: Prediction[];
@@ -13,6 +16,19 @@ interface SimpleMapProps {
 
 export default function SimpleMap({ predictions, selectedSpecies, onLocationSelect }: SimpleMapProps) {
   const filteredPredictions = predictions.filter(p => p.species === selectedSpecies);
+  
+  const getBackgroundImage = () => {
+    switch (selectedSpecies) {
+      case 'cherry':
+        return cherryBloomMap;
+      case 'forsythia':
+        return forsythiaBloomMap;
+      case 'azalea':
+        return azaleaBloomMap;
+      default:
+        return cherryBloomMap;
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ko-KR', {
@@ -29,8 +45,15 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg">
-      <div className="h-full overflow-auto p-6">
+    <div className="w-full h-full bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg relative overflow-hidden">
+      {/* 배경 이미지 */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-20"
+        style={{ backgroundImage: `url(${getBackgroundImage()})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-background/60" />
+      
+      <div className="relative h-full overflow-auto p-6">
         <div className="text-center mb-6">
           <div className="text-4xl mb-2">🗺️</div>
           <h3 className="text-lg font-semibold">
@@ -41,8 +64,8 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto">
-          {filteredPredictions.slice(0, 12).map((prediction) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-[500px] overflow-y-auto">
+          {filteredPredictions.slice(0, 20).map((prediction) => (
             <Card 
               key={`${prediction.region_code}-${prediction.species}`}
               className="hover:shadow-lg transition-all duration-200 cursor-pointer hover-scale"
@@ -83,10 +106,10 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
           ))}
         </div>
 
-        {filteredPredictions.length > 12 && (
+        {filteredPredictions.length > 20 && (
           <div className="text-center mt-4">
             <Badge variant="secondary">
-              +{filteredPredictions.length - 12}개 지역 더 있음
+              +{filteredPredictions.length - 20}개 지역 더 있음
             </Badge>
           </div>
         )}
