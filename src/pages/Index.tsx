@@ -158,11 +158,20 @@ const Index = () => {
           </CardHeader>
           <CardContent className="p-0 h-full">
             <div className="h-full">
-              <BloomMap
-                predictions={predictions}
-                selectedSpecies={selectedSpecies}
-                onLocationSelect={handleLocationSelect}
-              />
+              {predictions.length > 0 ? (
+                <BloomMap
+                  predictions={predictions}
+                  selectedSpecies={selectedSpecies}
+                  onLocationSelect={handleLocationSelect}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center">
+                    <div className="text-4xl mb-4">🌸</div>
+                    <div className="text-lg font-medium">지도 로딩 중...</div>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

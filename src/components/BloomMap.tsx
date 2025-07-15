@@ -35,7 +35,7 @@ function MapController({ center }: { center: [number, number] }) {
   return null;
 }
 
-export default function BloomMap({ predictions, selectedSpecies, onLocationSelect }: BloomMapProps) {
+function BloomMap({ predictions, selectedSpecies, onLocationSelect }: BloomMapProps) {
   const [filteredPredictions, setFilteredPredictions] = useState<Prediction[]>([]);
 
   useEffect(() => {
@@ -188,3 +188,5 @@ export default function BloomMap({ predictions, selectedSpecies, onLocationSelec
     </div>
   );
 }
+
+export default BloomMap;
