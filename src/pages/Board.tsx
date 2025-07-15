@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Calendar, MapPin, User } from "lucide-react";
+import { Plus, Search, Calendar, MapPin, User, Trash2 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -80,6 +80,26 @@ export default function Board() {
       setFilteredSightings(transformedData);
     }
     setLoading(false);
+  };
+
+  const handleDeleteSighting = async (sightingId: string) => {
+    if (!window.confirm('정말로 이 제보를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from('sightings')
+      .delete()
+      .eq('id', sightingId);
+
+    if (error) {
+      console.error('Error deleting sighting:', error);
+      alert('삭제 중 오류가 발생했습니다.');
+    } else {
+      // Remove from local state
+      setSightings(prev => prev.filter(s => s.id !== sightingId));
+      setFilteredSightings(prev => prev.filter(s => s.id !== sightingId));
+    }
   };
 
   useEffect(() => {
@@ -270,11 +290,23 @@ export default function Board() {
                   )}
                 </div>
                 
-                <Button variant="outline" size="sm" className="w-full mt-4" asChild>
-                  <Link to={`/board/${sighting.id}`}>
-                    자세히 보기
-                  </Link>
-                </Button>
+                <div className="flex gap-2 mt-4">
+                  <Button variant="outline" size="sm" className="flex-1" asChild>
+                    <Link to={`/board/${sighting.id}`}>
+                      자세히 보기
+                    </Link>
+                  </Button>
+                  {user && user.id === sighting.user_id && (
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={() => handleDeleteSighting(sighting.id)}
+                      className="px-3"
+                    >
+                      삭제
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}

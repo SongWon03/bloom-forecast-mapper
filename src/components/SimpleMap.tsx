@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar } from "lucide-react";
 import { Prediction, SPECIES_CONFIG } from "@/types";
-import cherryBloomMap from "@/assets/cherry-bloom-map.png";
-import forsythiaBloomMap from "@/assets/forsythia-bloom-map.png";
-import azaleaBloomMap from "@/assets/azalea-bloom-map.png";
+import cherryBloomMap from "@/assets/2025 Cherry.png";
+import forsythiaBloomMap from "@/assets/2025 Forsythia.png";
+import azaleaBloomMap from "@/assets/2025 Rosebay.png";
 
 interface SimpleMapProps {
   predictions: Prediction[];
@@ -64,7 +64,7 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-[500px] overflow-y-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 max-h-[500px] overflow-y-auto">
           {filteredPredictions.slice(0, 20).map((prediction) => (
             <Card 
               key={`${prediction.region_code}-${prediction.species}`}
