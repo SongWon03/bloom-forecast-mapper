@@ -176,8 +176,8 @@ export default function BoardNew() {
                 <RadioGroupItem value="bud" id="bud" />
                 <Label htmlFor="bud" className="cursor-pointer flex-1">
                   <div>
-                    <div className="font-medium">발아 (새싹)</div>
-                    <div className="text-sm text-muted-foreground">꽃봉오리가 보이기 시작</div>
+                    <div className="font-medium">발아</div>
+                    <div className="text-sm text-muted-foreground">한 나무의 대략 20%의 꽃봉오리가 발아한 시점</div>
                   </div>
                 </Label>
               </div>
@@ -186,7 +186,7 @@ export default function BoardNew() {
                 <Label htmlFor="bloom" className="cursor-pointer flex-1">
                   <div>
                     <div className="font-medium">개화</div>
-                    <div className="text-sm text-muted-foreground">꽃이 활짝 핀 상태</div>
+                    <div className="text-sm text-muted-foreground">가지 당 3개의 꽃이 활짝 핀 시점</div>
                   </div>
                 </Label>
               </div>
