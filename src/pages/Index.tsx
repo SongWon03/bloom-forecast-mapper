@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Calendar, MapPin, TrendingUp, Clock } from "lucide-react";
 import { Prediction, SPECIES_CONFIG } from "@/types";
 import predictionsData from "@/data/predictions.json";
-import BloomMap from "@/components/BloomMap";
+import SimpleMap from "@/components/SimpleMap";
 
 const Index = () => {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
@@ -158,20 +158,11 @@ const Index = () => {
           </CardHeader>
           <CardContent className="p-0 h-full">
             <div className="h-full">
-              {predictions.length > 0 ? (
-                <BloomMap
-                  predictions={predictions}
-                  selectedSpecies={selectedSpecies}
-                  onLocationSelect={handleLocationSelect}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center">
-                    <div className="text-4xl mb-4">🌸</div>
-                    <div className="text-lg font-medium">지도 로딩 중...</div>
-                  </div>
-                </div>
-              )}
+              <SimpleMap
+                predictions={predictions}
+                selectedSpecies={selectedSpecies}
+                onLocationSelect={handleLocationSelect}
+              />
             </div>
           </CardContent>
         </Card>
