@@ -63,24 +63,40 @@ export default function BloomMap({ predictions, selectedSpecies, onLocationSelec
     return L.divIcon({
       html: `
         <div style="
-          background-color: ${color};
-          width: 30px;
-          height: 30px;
+          background: linear-gradient(135deg, ${color} 0%, ${color}cc 100%);
+          width: 36px;
+          height: 36px;
           border-radius: 50%;
           border: 3px solid white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 16px;
+          font-size: 18px;
           cursor: pointer;
-        ">
+          transition: all 0.2s ease;
+          position: relative;
+        " 
+        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.25)'"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+        >
+          <div style="
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+          "></div>
           ${species.icon}
         </div>
       `,
-      className: 'custom-bloom-marker',
-      iconSize: [30, 30],
-      iconAnchor: [15, 15]
+      className: 'custom-bloom-marker-modern',
+      iconSize: [36, 36],
+      iconAnchor: [18, 18]
     });
   };
 
@@ -103,12 +119,14 @@ export default function BloomMap({ predictions, selectedSpecies, onLocationSelec
       <MapContainer
         center={[36.5, 127.5]}
         zoom={7}
-        className="w-full h-full rounded-lg"
+        className="w-full h-full"
         zoomControl={false}
+        style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          maxZoom={19}
         />
         
         <MapController center={[36.5, 127.5]} />
@@ -122,37 +140,43 @@ export default function BloomMap({ predictions, selectedSpecies, onLocationSelec
               click: () => onLocationSelect(prediction)
             }}
           >
-            <Popup>
-              <Card className="border-0 shadow-none">
-                <CardHeader className="p-3 pb-2">
-                  <CardTitle className="text-sm flex items-center">
-                    <span className="text-lg mr-2">{SPECIES_CONFIG[prediction.species].icon}</span>
-                    {SPECIES_CONFIG[prediction.species].name}
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    {prediction.region_name}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-3 pt-0">
-                  <div className="space-y-2">
-                    <div className="flex items-center text-xs">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      예상 개화: {formatDate(prediction.predicted_date)}
+            <Popup className="custom-popup" maxWidth={280}>
+              <Card className="border-0 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm">
+                <CardHeader className="p-4 pb-3 bg-gradient-to-r from-primary/5 to-accent/5">
+                  <CardTitle className="text-base flex items-center font-semibold">
+                    <span className="text-xl mr-3">{SPECIES_CONFIG[prediction.species].icon}</span>
+                    <div>
+                      <div>{SPECIES_CONFIG[prediction.species].name}</div>
+                      <div className="text-xs font-normal text-muted-foreground mt-1">
+                        {prediction.region_name}
+                      </div>
                     </div>
-                    
-                    <div className="text-xs text-muted-foreground">
-                      {getDaysUntilBloom(prediction.predicted_date) > 0 
-                        ? `D-${getDaysUntilBloom(prediction.predicted_date)}`
-                        : '개화 예상 완료'
-                      }
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-3">
+                  <div className="space-y-3">
+                    <div className="bg-primary/5 p-3 rounded-lg">
+                      <div className="flex items-center text-sm font-medium mb-1">
+                        <Calendar className="w-4 h-4 mr-2 text-primary" />
+                        예상 개화일
+                      </div>
+                      <div className="text-base font-semibold">
+                        {formatDate(prediction.predicted_date)}
+                      </div>
+                      <div className="text-sm text-primary font-medium mt-1">
+                        {getDaysUntilBloom(prediction.predicted_date) > 0 
+                          ? `D-${getDaysUntilBloom(prediction.predicted_date)}`
+                          : '개화 완료'
+                        }
+                      </div>
                     </div>
                     
                     <Button 
                       size="sm" 
-                      className="w-full text-xs h-7"
+                      className="w-full text-sm h-9 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg"
                       onClick={() => onLocationSelect(prediction)}
                     >
-                      자세히 보기
+                      상세 정보 보기
                     </Button>
                   </div>
                 </CardContent>
