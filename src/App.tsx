@@ -13,6 +13,7 @@ import Board from "./pages/Board";
 import BoardNew from "./pages/BoardNew";
 import BoardDetail from "./pages/BoardDetail";
 import HallOfFame from "./pages/HallOfFame";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/board" element={<Board />} />
             <Route path="/board/new" element={<BoardNew />} />
             <Route path="/board/:id" element={<BoardDetail />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/hall-of-fame" element={<HallOfFame />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

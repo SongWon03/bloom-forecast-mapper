@@ -23,6 +23,7 @@ interface SimpleSighting {
   memo?: string;
   created_at: string;
   nickname: string;
+  isAdmin?: boolean;
 }
 
 export default function Board() {
@@ -32,11 +33,32 @@ export default function Board() {
   const [speciesFilter, setSpeciesFilter] = useState("all");
   const [stageFilter, setStageFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
     fetchSightings();
-  }, []);
+    checkAdminStatus();
+  }, [user]);
+
+  const checkAdminStatus = async () => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!error && data?.role === 'admin') {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  };
 
   const fetchSightings = async () => {
     setLoading(true);
@@ -54,7 +76,7 @@ export default function Board() {
         photo_url,
         memo,
         created_at,
-        profiles(nickname)
+        profiles!inner(nickname, role)
       `)
       .order('created_at', { ascending: false });
 
@@ -74,7 +96,8 @@ export default function Board() {
         photo_url: item.photo_url,
         memo: item.memo,
         created_at: item.created_at,
-        nickname: (item.profiles as any)?.nickname || '익명'
+        nickname: (item.profiles as any)?.nickname || '익명',
+        isAdmin: (item.profiles as any)?.role === 'admin'
       }));
       setSightings(transformedData);
       setFilteredSightings(transformedData);
@@ -99,6 +122,7 @@ export default function Board() {
       // Remove from local state
       setSightings(prev => prev.filter(s => s.id !== sightingId));
       setFilteredSightings(prev => prev.filter(s => s.id !== sightingId));
+      alert('성공적으로 삭제되었습니다.');
     }
   };
 
@@ -281,6 +305,11 @@ export default function Board() {
                   <div className="flex items-center text-sm text-muted-foreground">
                     <User className="w-4 h-4 mr-1" />
                     <span>{sighting.nickname}</span>
+                    {sighting.isAdmin && (
+                      <Badge variant="secondary" className="ml-2 text-xs">
+                        관리자
+                      </Badge>
+                    )}
                   </div>
                   
                   {sighting.memo && (
@@ -296,7 +325,7 @@ export default function Board() {
                       자세히 보기
                     </Link>
                   </Button>
-                  {user && user.id === sighting.user_id && (
+                  {user && (user.id === sighting.user_id || isAdmin) && (
                     <Button 
                       variant="destructive" 
                       size="sm" 

@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MapPin, Users, Award, Info, BarChart3, MessageSquare, LogOut } from "lucide-react";
+import { MapPin, Users, Award, Info, BarChart3, MessageSquare, LogOut, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,8 +12,33 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
   
   const isActive = (path: string) => location.pathname === path;
+
+  useEffect(() => {
+    checkAdminStatus();
+  }, [user]);
+
+  const checkAdminStatus = async () => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!error && data?.role === 'admin') {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -60,8 +86,17 @@ export default function Layout({ children }: LayoutProps) {
                 isActive('/model') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent'
               }`}>
                 <BarChart3 className="w-4 h-4" />
-                <span>Chill-Day Model</span>
-              </Link>
+                 <span>Chill-Day Model</span>
+               </Link>
+               
+               {isAdmin && (
+                 <Link to="/admin" className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                   isActive('/admin') ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-accent'
+                 }`}>
+                   <Shield className="w-4 h-4" />
+                   <span>관리자</span>
+                 </Link>
+               )}
             </nav>
             
             {user ? (

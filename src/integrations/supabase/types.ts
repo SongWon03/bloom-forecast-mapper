@@ -64,6 +64,7 @@ export type Database = {
           nickname: string
           points: number
           reports: number
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string
           user_id: string
         }
@@ -74,6 +75,7 @@ export type Database = {
           nickname: string
           points?: number
           reports?: number
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id: string
         }
@@ -84,6 +86,7 @@ export type Database = {
           nickname?: string
           points?: number
           reports?: number
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
           user_id?: string
         }
@@ -136,13 +139,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_admin: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
       update_user_stats: {
         Args: { user_id_param: string }
         Returns: undefined
       }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -269,6 +276,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["admin", "user"],
+    },
   },
 } as const
