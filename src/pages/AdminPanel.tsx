@@ -49,24 +49,29 @@ export default function AdminPanel() {
   const checkAdminAndFetchData = async () => {
     if (!user) return;
 
-    // Check if user is admin
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
+    try {
+      // Check if user is admin
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
 
-    if (profile?.role !== 'admin') {
-      toast({
-        title: "접근 권한 없음",
-        description: "관리자만 접근할 수 있습니다.",
-        variant: "destructive",
-      });
-      return;
+      if (profile?.role !== 'admin') {
+        toast({
+          title: "접근 권한 없음",
+          description: "관리자만 접근할 수 있습니다.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await Promise.all([fetchUsers(), fetchSightings()]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      setLoading(false);
     }
-
-    await Promise.all([fetchUsers(), fetchSightings()]);
-    setLoading(false);
   };
 
   const fetchUsers = async () => {

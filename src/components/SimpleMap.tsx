@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar } from "lucide-react";
 import { Prediction, SPECIES_CONFIG } from "@/types";
-import cherryBloomMap from "https://github.com/SongWon03/bloom-forecast-mapper/raw/main/src/assets/2025%20Cherry.png";
+import cherryBloomMap from "@/assets/2025 Cherry.png";
 import forsythiaBloomMap from "@/assets/2025 Forsythia.png";
 import azaleaBloomMap from "@/assets/2025 Rosebay.png";
 

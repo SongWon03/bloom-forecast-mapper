@@ -47,60 +47,69 @@ export default function Board() {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
 
-    if (!error && data?.role === 'admin') {
-      setIsAdmin(true);
-    } else {
+      if (!error && data?.role === 'admin') {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
       setIsAdmin(false);
     }
   };
 
   const fetchSightings = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('sightings')
-      .select(`
-        id,
-        user_id,
-        region_name,
-        lat,
-        lon,
-        species,
-        stage,
-        date,
-        photo_url,
-        memo,
-        created_at,
-        profiles!inner(nickname, role)
-      `)
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('sightings')
+        .select(`
+          id,
+          user_id,
+          region_name,
+          lat,
+          lon,
+          species,
+          stage,
+          date,
+          photo_url,
+          memo,
+          created_at,
+          profiles!inner(nickname, role)
+        `)
+        .order('created_at', { ascending: false });
 
-    if (error) {
+      if (error) {
+        console.error('Error fetching sightings:', error);
+      } else {
+        // Transform data to match our interface
+        const transformedData: SimpleSighting[] = (data || []).map(item => ({
+          id: item.id,
+          user_id: item.user_id,
+          region_name: item.region_name,
+          lat: item.lat,
+          lon: item.lon,
+          species: item.species as 'cherry' | 'forsythia' | 'azalea',
+          stage: item.stage as 'bud' | 'bloom',
+          date: item.date,
+          photo_url: item.photo_url,
+          memo: item.memo,
+          created_at: item.created_at,
+          nickname: (item.profiles as any)?.nickname || '익명',
+          isAdmin: (item.profiles as any)?.role === 'admin'
+        }));
+        setSightings(transformedData);
+        setFilteredSightings(transformedData);
+      }
+    } catch (error) {
       console.error('Error fetching sightings:', error);
-    } else {
-      // Transform data to match our interface
-      const transformedData: SimpleSighting[] = (data || []).map(item => ({
-        id: item.id,
-        user_id: item.user_id,
-        region_name: item.region_name,
-        lat: item.lat,
-        lon: item.lon,
-        species: item.species as 'cherry' | 'forsythia' | 'azalea',
-        stage: item.stage as 'bud' | 'bloom',
-        date: item.date,
-        photo_url: item.photo_url,
-        memo: item.memo,
-        created_at: item.created_at,
-        nickname: (item.profiles as any)?.nickname || '익명',
-        isAdmin: (item.profiles as any)?.role === 'admin'
-      }));
-      setSightings(transformedData);
-      setFilteredSightings(transformedData);
     }
     setLoading(false);
   };

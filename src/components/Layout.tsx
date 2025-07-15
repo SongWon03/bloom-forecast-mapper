@@ -26,16 +26,21 @@ export default function Layout({ children }: LayoutProps) {
       return;
     }
 
-    const { supabase } = await import("@/integrations/supabase/client");
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('user_id', user.id)
-      .single();
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
 
-    if (!error && data?.role === 'admin') {
-      setIsAdmin(true);
-    } else {
+      if (!error && data?.role === 'admin') {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
       setIsAdmin(false);
     }
   };
