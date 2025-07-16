@@ -85,10 +85,14 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
       {/* 지도 이미지 */}
       <div className="w-full flex justify-center mb-6">
         <img
-          src={getMapImage()}
+          src={`https://raw.githubusercontent.com/SongWon03/bloom-forecast-mapper/main/src/assets/2025%20${selectedSpecies === 'cherry' ? 'Cherry' : selectedSpecies === 'forsythia' ? 'Forsythia' : 'Rosebay'}.png`}
           alt={`${SPECIES_CONFIG[selectedSpecies].name} 개화 예측 지도`}
           className="max-w-2xl w-full h-auto rounded-xl shadow-lg border object-contain bg-white"
           style={{ background: '#fff', maxHeight: '70vh' }}
+          onError={(e) => {
+            // 이미지 로드 실패시 로컬 이미지로 fallback
+            e.currentTarget.src = getMapImage();
+          }}
         />
       </div>
 

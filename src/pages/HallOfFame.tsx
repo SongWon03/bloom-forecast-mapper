@@ -25,7 +25,7 @@ export default function HallOfFame() {
     const { data, error } = await supabase
       .from('profiles')
       .select('id, nickname, points, reports, last_report')
-      .order('points', { ascending: false })
+      .order('reports', { ascending: false })  // 제보수 기준으로 정렬
       .limit(20);
 
     if (error) {
@@ -65,10 +65,10 @@ export default function HallOfFame() {
     return <Badge variant="outline">{rank}위</Badge>;
   };
 
-  const getPointsBadge = (points: number) => {
-    if (points >= 200) return { emoji: "🌟", title: "개화 전문가", color: "bg-yellow-500" };
-    if (points >= 100) return { emoji: "🌸", title: "개화 탐험가", color: "bg-pink-500" };
-    if (points >= 50) return { emoji: "🌱", title: "새싹 관찰자", color: "bg-green-500" };
+  const getPointsBadge = (reports: number) => {
+    if (reports >= 20) return { emoji: "🌟", title: "개화 전문가", color: "bg-yellow-500" };
+    if (reports >= 10) return { emoji: "🌸", title: "개화 탐험가", color: "bg-pink-500" };
+    if (reports >= 5) return { emoji: "🌱", title: "새싹 관찰자", color: "bg-green-500" };
     return { emoji: "🔍", title: "초보 탐험가", color: "bg-blue-500" };
   };
 
@@ -121,7 +121,16 @@ export default function HallOfFame() {
               <CardContent className="text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">{leaderboard[0].points}점</div>
                 <div className="text-sm text-muted-foreground">{leaderboard[0].reports}회 제보</div>
-                <Badge className="mt-2 bg-yellow-500">🌟 개화 전문가</Badge>
+                <div className="mt-2">
+                  {(() => {
+                    const badge = getPointsBadge(leaderboard[0].reports);
+                    return (
+                      <Badge className={`text-white ${badge.color}`}>
+                        {badge.emoji} {badge.title}
+                      </Badge>
+                    );
+                  })()}
+                </div>
               </CardContent>
             </Card>
           )}
@@ -154,7 +163,7 @@ export default function HallOfFame() {
           <CardHeader>
             <CardTitle>기여자 순위</CardTitle>
             <CardDescription>
-              제보 1회당 10점이 적립됩니다. 더 많은 제보로 랭킹을 올려보세요!
+              제보수 기준으로 순위가 매겨지며, 제보 1회당 10점이 적립됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -178,7 +187,7 @@ export default function HallOfFame() {
               <div className="space-y-3">
                 {leaderboard.map((user, index) => {
                   const rank = index + 1;
-                  const badge = getPointsBadge(user.points);
+                  const badge = getPointsBadge(user.reports);
                 
                 return (
                   <div
@@ -208,9 +217,11 @@ export default function HallOfFame() {
                     <div className="text-right">
                       <div className="font-bold text-lg">{user.points}점</div>
                       <div className="text-sm text-muted-foreground">{user.reports}회 제보</div>
-                      <Badge className={`mt-1 text-white ${badge.color}`}>
-                        {badge.emoji} {badge.title}
-                      </Badge>
+                      <div className="mt-1">
+                        <Badge className={`text-white ${badge.color}`}>
+                          {badge.emoji} {badge.title}
+                        </Badge>
+                      </div>
                     </div>
                     </div>
                   );
@@ -230,7 +241,7 @@ export default function HallOfFame() {
               <div className="text-3xl mb-2">🔍</div>
               <h3 className="font-semibold mb-1">초보 탐험가</h3>
               <p className="text-sm text-muted-foreground">첫 제보 완료</p>
-              <Badge variant="outline" className="mt-2">0-49점</Badge>
+              <Badge variant="outline" className="mt-2">1-4회 제보</Badge>
             </CardContent>
           </Card>
           
@@ -239,7 +250,7 @@ export default function HallOfFame() {
               <div className="text-3xl mb-2">🌱</div>
               <h3 className="font-semibold mb-1">새싹 관찰자</h3>
               <p className="text-sm text-muted-foreground">꾸준한 참여</p>
-              <Badge variant="outline" className="mt-2">50-99점</Badge>
+              <Badge variant="outline" className="mt-2">5-9회 제보</Badge>
             </CardContent>
           </Card>
           
@@ -248,7 +259,7 @@ export default function HallOfFame() {
               <div className="text-3xl mb-2">🌸</div>
               <h3 className="font-semibold mb-1">개화 탐험가</h3>
               <p className="text-sm text-muted-foreground">활발한 기여</p>
-              <Badge variant="outline" className="mt-2">100-199점</Badge>
+              <Badge variant="outline" className="mt-2">10-19회 제보</Badge>
             </CardContent>
           </Card>
           
@@ -257,7 +268,7 @@ export default function HallOfFame() {
               <div className="text-3xl mb-2">🌟</div>
               <h3 className="font-semibold mb-1">개화 전문가</h3>
               <p className="text-sm text-muted-foreground">최고 수준의 기여</p>
-              <Badge variant="outline" className="mt-2">200점+</Badge>
+              <Badge variant="outline" className="mt-2">20회+ 제보</Badge>
             </CardContent>
           </Card>
         </div>
