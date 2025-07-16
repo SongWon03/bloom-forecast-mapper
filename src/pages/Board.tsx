@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Calendar, MapPin, User, Trash2 } from "lucide-react";
+import { Plus, Search, Calendar, MapPin, User, Trash2, Edit2, Check, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { SPECIES_CONFIG } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,6 +35,8 @@ export default function Board() {
   const [stageFilter, setStageFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editMemo, setEditMemo] = useState("");
   const { user } = useAuth();
   const location = useLocation();
 
@@ -144,6 +147,39 @@ export default function Board() {
       setSightings(prev => prev.filter(s => s.id !== sightingId));
       setFilteredSightings(prev => prev.filter(s => s.id !== sightingId));
       alert('성공적으로 삭제되었습니다.');
+    }
+  };
+
+  const handleEditStart = (sighting: SimpleSighting) => {
+    setEditingId(sighting.id);
+    setEditMemo(sighting.memo || '');
+  };
+
+  const handleEditCancel = () => {
+    setEditingId(null);
+    setEditMemo('');
+  };
+
+  const handleEditSave = async (sightingId: string) => {
+    const { error } = await supabase
+      .from('sightings')
+      .update({ memo: editMemo })
+      .eq('id', sightingId);
+
+    if (error) {
+      console.error('Error updating sighting:', error);
+      alert('수정 중 오류가 발생했습니다.');
+    } else {
+      // Update local state
+      setSightings(prev => prev.map(s => 
+        s.id === sightingId ? { ...s, memo: editMemo } : s
+      ));
+      setFilteredSightings(prev => prev.map(s => 
+        s.id === sightingId ? { ...s, memo: editMemo } : s
+      ));
+      setEditingId(null);
+      setEditMemo('');
+      alert('성공적으로 수정되었습니다.');
     }
   };
 
@@ -329,10 +365,40 @@ export default function Board() {
                     )}
                   </div>
                   
-                  {sighting.memo && (
-                    <p className="text-sm mt-3 p-2 bg-muted/50 rounded">
-                      {sighting.memo}
-                    </p>
+                   {editingId === sighting.id ? (
+                    <div className="mt-3 space-y-2">
+                      <Textarea
+                        value={editMemo}
+                        onChange={(e) => setEditMemo(e.target.value)}
+                        placeholder="메모를 입력하세요..."
+                        className="min-h-[80px]"
+                      />
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleEditSave(sighting.id)}
+                          className="flex-1"
+                        >
+                          <Check className="w-4 h-4 mr-1" />
+                          저장
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={handleEditCancel}
+                          className="flex-1"
+                        >
+                          <X className="w-4 h-4 mr-1" />
+                          취소
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    sighting.memo && (
+                      <p className="text-sm mt-3 p-2 bg-muted/50 rounded">
+                        {sighting.memo}
+                      </p>
+                    )
                   )}
                 </div>
                 
@@ -342,14 +408,24 @@ export default function Board() {
                       자세히 보기
                     </Link>
                   </Button>
-                  {user && (user.id === sighting.user_id || isAdmin) && (
+                  {user && user.id === sighting.user_id && editingId !== sighting.id && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleEditStart(sighting)}
+                      className="px-3"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                  {user && (user.id === sighting.user_id || isAdmin) && editingId !== sighting.id && (
                     <Button 
                       variant="destructive" 
                       size="sm" 
                       onClick={() => handleDeleteSighting(sighting.id)}
                       className="px-3"
                     >
-                      삭제
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   )}
                 </div>
