@@ -16,6 +16,14 @@ interface SimpleMapProps {
 
 export default function SimpleMap({ predictions, selectedSpecies, onLocationSelect }: SimpleMapProps) {
   const filteredPredictions = predictions.filter(p => p.species === selectedSpecies);
+  
+  // 중복 제거를 위한 고유 키 확인
+  const uniquePredictions = filteredPredictions.filter((prediction, index, self) => 
+    index === self.findIndex(p => 
+      p.region_code === prediction.region_code && 
+      p.species === prediction.species
+    )
+  );
 
   const getMapImage = () => {
     switch (selectedSpecies) {
@@ -86,14 +94,14 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
 
       {/* 지역별 카드 그리드 */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 max-w-7xl mx-auto mb-8">
-        {filteredPredictions.slice(0, 20).map((prediction) => {
+        {uniquePredictions.slice(0, 20).map((prediction) => {
           const daysUntilBloom = getDaysUntilBloom(prediction.predicted_date);
           const statusColor = getStatusColor(daysUntilBloom);
           const statusText = getStatusText(daysUntilBloom);
 
           return (
             <Card
-              key={`${prediction.region_code}-${selectedSpecies}`}
+              key={`${prediction.region_code}-${prediction.species}-${prediction.lat}-${prediction.lon}`}
               className="hover:shadow-lg transition-all duration-200 cursor-pointer hover-scale border-l-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm"
               style={{ borderLeftColor: statusColor.replace('bg-', '#') }}
               onClick={() => onLocationSelect(prediction)}
@@ -165,13 +173,13 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
             <div className="text-lg font-bold text-primary">
-              {filteredPredictions.filter(p => getDaysUntilBloom(p.predicted_date) < 7).length}
+              {uniquePredictions.filter(p => getDaysUntilBloom(p.predicted_date) < 7).length}
             </div>
             <div className="text-xs text-muted-foreground">개화 임박</div>
           </div>
           <div>
             <div className="text-lg font-bold text-yellow-600">
-              {filteredPredictions.filter(p => {
+              {uniquePredictions.filter(p => {
                 const days = getDaysUntilBloom(p.predicted_date);
                 return days >= 7 && days < 14;
               }).length}
@@ -180,7 +188,7 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
           </div>
           <div>
             <div className="text-lg font-bold text-blue-600">
-              {filteredPredictions.filter(p => {
+              {uniquePredictions.filter(p => {
                 const days = getDaysUntilBloom(p.predicted_date);
                 return days >= 14 && days < 30;
               }).length}
@@ -189,7 +197,7 @@ export default function SimpleMap({ predictions, selectedSpecies, onLocationSele
           </div>
           <div>
             <div className="text-lg font-bold text-green-600">
-              {filteredPredictions.filter(p => getDaysUntilBloom(p.predicted_date) >= 30).length}
+              {uniquePredictions.filter(p => getDaysUntilBloom(p.predicted_date) >= 30).length}
             </div>
             <div className="text-xs text-muted-foreground">개화 준비</div>
           </div>

@@ -117,8 +117,8 @@ export default function Board() {
           nickname: item.profiles?.nickname || '익명',
           isAdmin: item.profiles?.role === 'admin'
         })) : [];
-        setSightings(transformedData);
-        setFilteredSightings(transformedData);
+        setSightings(transformedData as SimpleSighting[]);
+        setFilteredSightings(transformedData as SimpleSighting[]);
       }
     } catch (error) {
       console.error('Error fetching sightings:', error);
